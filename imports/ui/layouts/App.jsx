@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session'; // XXX: SESSION
 import { Lists } from '../../api/lists/lists.js';
 import UserMenu from '../components/UserMenu.jsx';
+import MainMenu from '../components/MainMenu.jsx';
 import ListList from '../components/ListList.jsx';
 import ConnectionNotification from '../components/ConnectionNotification.jsx';
 import Loading from '../components/Loading.jsx';
@@ -79,6 +80,7 @@ export default class App extends React.Component {
       <div id="container page-wrapper" className={menuOpen ? 'menu-open gray-bg' : 'gray-bg'}>
         <section id="menu">
           <UserMenu user={user} logout={this.logout} />
+          <MainMenu user={user} />
           <ListList lists={lists} />
         </section>
           {showConnectionIssue && !connected
