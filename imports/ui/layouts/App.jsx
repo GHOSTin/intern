@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session'; // XXX: SESSION
 import { Lists } from '../../api/lists/lists.js';
@@ -8,6 +9,11 @@ import MainMenu from '../components/MainMenu.jsx';
 import ListList from '../components/ListList.jsx';
 import ConnectionNotification from '../components/ConnectionNotification.jsx';
 import Loading from '../components/Loading.jsx';
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;
 
@@ -76,12 +82,12 @@ export default class App extends React.Component {
     });
 
     return (
+    <MuiThemeProvider>
     <div className="wrapper">
       <div id="container page-wrapper" className={menuOpen ? 'menu-open gray-bg' : 'gray-bg'}>
         <section id="menu">
           <UserMenu user={user} logout={this.logout} />
           <MainMenu user={user} />
-          <ListList lists={lists} />
         </section>
           {showConnectionIssue && !connected
               ? <ConnectionNotification />
@@ -100,6 +106,7 @@ export default class App extends React.Component {
         </div>
       </div>
     </div>
+    </MuiThemeProvider>
     );
   }
 }
