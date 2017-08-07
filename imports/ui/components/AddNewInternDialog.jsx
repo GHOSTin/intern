@@ -3,9 +3,14 @@ import BaseComponent from '../components/BaseComponent.jsx';
 import DatePicker from 'material-ui/DatePicker';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+import Divider from 'material-ui/Divider';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import areIntlLocalesSupported from 'intl-locales-supported';
+import {grey400, grey50} from 'material-ui/styles/colors';
 
-import {Row, Col} from 'react-materialize';
+import {Row, Col} from 'react-flexbox-grid';
+
 
 
 let DateTimeFormat;
@@ -18,8 +23,12 @@ if (areIntlLocalesSupported(['ru-RU'])) {
     require('intl/locale-data/jsonp/ru-RU');
 }
 
+const style = {
+    color: grey400
+};
+
 const customContentStyle = {
-    width: '75%',
+    width: '99%',
     maxWidth: 'none',
 };
 
@@ -31,6 +40,12 @@ export default class AddNewInternDialog extends BaseComponent {
     render() {
         const actions = [
             <FlatButton
+                label="Отмена"
+                primary={false}
+                keyboardFocused={false}
+                onTouchTap={this.props.onHide}
+            />,
+            <FlatButton
                 label="Сохранить"
                 primary={true}
                 keyboardFocused={false}
@@ -40,7 +55,10 @@ export default class AddNewInternDialog extends BaseComponent {
         return (
             <div>
                 <Dialog
-                    title="Dialog With Date Picker"
+                    title="Карточка стажера"
+                    titleStyle={{
+                        background: grey50
+                    }}
                     actions={actions}
                     modal={true}
                     open={this.props.open}
@@ -48,10 +66,89 @@ export default class AddNewInternDialog extends BaseComponent {
                     contentStyle={customContentStyle}
                     autoScrollBodyContent={true}
                 >
-                    Open a Date Picker dialog from within a dialog.
+                    <h3 className="m-t">Общая информация</h3>
                     <Row>
-                        <Col s={3} l={1}>
-                            <DatePicker hintText="Portrait Dialog" locale="ru-RU" DateTimeFormat={DateTimeFormat}/>
+                        <Col xs={12} md={9}>
+                            <TextField
+                                id="lastname"
+                                fullWidth={true}
+                                floatingLabelText="Фамилия"
+                            />
+                            <TextField
+                                id="firstname"
+                                fullWidth={true}
+                                floatingLabelText="Имя"
+                            />
+                            <TextField
+                                id="middlename"
+                                fullWidth={true}
+                                floatingLabelText="Отчество"
+                            />
+                        </Col>
+                        <Divider />
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={9}>
+                            <Row>
+                                <Col xs={12} md={3} className="m-t">
+                                    <span style={style}>Пол:</span>
+                                </Col>
+                                <Col xs={12} md={9} className="m-t">
+                                    <RadioButtonGroup name="gender">
+                                        <RadioButton
+                                            value="male"
+                                            label="Мужской"
+                                        />
+                                        <RadioButton
+                                            value="female"
+                                            label="Женский"
+                                        />
+                                    </RadioButtonGroup>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} lg={3}>
+                            <DatePicker
+                                floatingLabelText="Дата рождения"
+                                locale="ru-RU"
+                                DateTimeFormat={DateTimeFormat}
+                                okLabel="Принять"
+                                cancelLabel="Отмена"
+                            />
+                        </Col>
+                    </Row>
+                    <h3 className="m-t">Информация о работнике</h3>
+                    <Row>
+                        <Col xs={12} md={6}>
+                            <TextField
+                                id="tabelNumber"
+                                fullWidth={true}
+                                floatingLabelText="Табельный номер"
+                                type="number"
+                            />
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <DatePicker
+                                floatingLabelText="Дата приема на завод"
+                                locale="ru-RU"
+                                DateTimeFormat={DateTimeFormat}
+                                fullWidth={true}
+                                okLabel="Принять"
+                                cancelLabel="Отмена"
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={3}>
+
+                        </Col>
+                        <Col xs={12} md={3}>
+
+                        </Col>
+                        <Col xs={12} md={3}>
+
                         </Col>
                     </Row>
                 </Dialog>

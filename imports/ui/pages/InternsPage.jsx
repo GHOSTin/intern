@@ -6,7 +6,15 @@ import NotFoundPage from '../pages/NotFoundPage.jsx';
 import Message from '../components/Message.jsx';
 import AddNewInternDialog from '../components/AddNewInternDialog.jsx';
 import MobileMenu from '../components/MobileMenu.jsx';
-import {Button} from 'react-materialize';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import {lightBlue300} from 'material-ui/styles/colors';
+
+const style = {
+    position: "absolute",
+    right: 10,
+    bottom: 10
+};
 
 export default class InternsPage extends BaseComponent {
   constructor(props) {
@@ -73,9 +81,13 @@ export default class InternsPage extends BaseComponent {
             ? <Message title={i18n.__('pages.listPage.loading')} />
             : Interns}
         </div>
-        <div className="fixed-action-btn">
-          <Button floating={true} waves={"light"} large={true} icon={"add"} className="light-blue lighten-2" onClick={this.onShowingModal}/>
-        </div>
+          <FloatingActionButton
+              backgroundColor={lightBlue300}
+              onTouchTap={this.onShowingModal}
+              style={style}
+          >
+            <ContentAdd/>
+          </FloatingActionButton>
       </div>
     );
   }
