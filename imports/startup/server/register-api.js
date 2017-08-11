@@ -5,3 +5,5 @@ import '../../api/todos/server/publications.js';
 import '../../api/languages/methods.js';
 import '../../api/interns/methods.js';
 import '../../api/interns/server/publications.js';
+//import '../../api/departments/departments.js';
+import '../../api/departments/server/publications.js';

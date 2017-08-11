@@ -1,5 +1,6 @@
 import React from "react";
 import BaseComponent from '../components/BaseComponent.jsx';
+import AutoCompleteContainer from '/imports/ui/components/DirectionAutoComplete';
 import DatePicker from 'material-ui/DatePicker';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -141,14 +142,31 @@ export default class AddNewInternDialog extends BaseComponent {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} md={3}>
-
+                        <Col xs={12} md={6}>
+                            <AutoCompleteContainer id="orgDirection" label="Дирекция"/>
                         </Col>
-                        <Col xs={12} md={3}>
-
+                        <Col xs={12} md={4}>
+                            <TextField
+                                id="orgDepartment"
+                                fullWidth={true}
+                                floatingLabelText="Управление"
+                            />
                         </Col>
-                        <Col xs={12} md={3}>
-
+                        <Col xs={12} md={4}>
+                            <TextField
+                                id="orgGroup"
+                                fullWidth={true}
+                                floatingLabelText="Отдел"
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col lg={12}>
+                            <TextField
+                                id="position"
+                                fullWidth={true}
+                                floatingLabelText="Должность"
+                            />
                         </Col>
                     </Row>
                 </Dialog>
