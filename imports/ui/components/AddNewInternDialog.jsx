@@ -1,6 +1,7 @@
 import React from "react";
 import BaseComponent from '../components/BaseComponent.jsx';
-import AutoCompleteContainer from '/imports/ui/components/DirectionAutoComplete';
+import DirectionAutoCompleteContainer from '/imports/ui/components/DirectionAutoComplete';
+import DepartmentAutoCompleteContainer from '/imports/ui/components/DepartmentAutoComplete';
 import DatePicker from 'material-ui/DatePicker';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -36,6 +37,32 @@ const customContentStyle = {
 export default class AddNewInternDialog extends BaseComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            direction:{},
+            department: {},
+            group: {}
+        };
+        this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
+        this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
+        this.onNewRequestGroup = this.onNewRequestGroup.bind(this);
+    }
+
+    onNewRequestDirection(value) {
+        this.setState({
+            direction: value
+        });
+    }
+
+    onNewRequestDepartment(value) {
+        this.setState({
+            department: value
+        })
+    }
+
+    onNewRequestGroup(value) {
+        this.setState({
+            group: value
+        })
     }
 
     render() {
@@ -142,21 +169,27 @@ export default class AddNewInternDialog extends BaseComponent {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} md={6}>
-                            <AutoCompleteContainer id="orgDirection" label="Дирекция"/>
-                        </Col>
                         <Col xs={12} md={4}>
-                            <TextField
-                                id="orgDepartment"
-                                fullWidth={true}
-                                floatingLabelText="Управление"
+                            <DirectionAutoCompleteContainer
+                                id="orgDirection"
+                                label="Дирекция"
+                                onNewRequest={this.onNewRequestDirection}
                             />
                         </Col>
                         <Col xs={12} md={4}>
-                            <TextField
+                            <DepartmentAutoCompleteContainer
+                                id="orgDepartment"
+                                label="Управление"
+                                direction={this.state.direction}
+                                onNewRequest={this.onNewRequestDepartment}
+                            />
+                        </Col>
+                        <Col xs={12} md={4}>
+                            <DepartmentAutoCompleteContainer
                                 id="orgGroup"
-                                fullWidth={true}
-                                floatingLabelText="Отдел"
+                                label="Отдел"
+                                direction={this.state.department}
+                                onNewRequest={this.onNewRequestGroup}
                             />
                         </Col>
                     </Row>
