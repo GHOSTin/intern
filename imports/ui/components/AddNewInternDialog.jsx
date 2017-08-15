@@ -49,6 +49,16 @@ export default class AddNewInternDialog extends BaseComponent {
         this.addEducation = this.addEducation.bind(this);
     }
 
+    componentWillReceiveProps(){
+        this.setState({
+            direction: this.props.direction,
+            department: this.props.department,
+            group: this.props.group,
+            stages: this.props.stages,
+            educations: this.props.educations
+        })
+    }
+
     onNewRequestDirection(value) {
         this.setState({
             direction: value
