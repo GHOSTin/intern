@@ -20,7 +20,7 @@ const menuProps = {
     width: 100
 };
 
-export class DirectionAutoComplete extends BaseComponent {
+export class EmployeeAutoComplete extends BaseComponent {
     constructor(props){
         super(props);
     }
@@ -43,7 +43,7 @@ export class DirectionAutoComplete extends BaseComponent {
     }
 }
 
-DirectionAutoComplete.propTypes = {
+EmployeeAutoComplete.propTypes = {
     loading: React.PropTypes.bool,
     listExists: React.PropTypes.bool,
     data: React.PropTypes.array,
@@ -52,10 +52,10 @@ DirectionAutoComplete.propTypes = {
     onNewRequest: React.PropTypes.func.isRequired
 };
 
-export default DirectionAutoCompleteContainer = createContainer(() => {
-    const departmentsHandle = Meteor.subscribe('departments.directions');
+export default EmployeeAutoCompleteContainer = createContainer(({department}) => {
+    const departmentsHandle = Meteor.subscribe('departments.departments', department._id);
     const loading = !departmentsHandle.ready();
-    const departments = Departments.find({parent_id: ""}, {
+    const departments = Departments.find({parent_id: department._id}, {
                 fields: {
                     _id:1,
                     name: 1
@@ -67,4 +67,4 @@ export default DirectionAutoCompleteContainer = createContainer(() => {
         listExists,
         data: listExists ? departments.fetch() : []
     };
-}, DirectionAutoComplete);
+}, EmployeeAutoComplete);

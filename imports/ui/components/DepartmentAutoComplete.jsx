@@ -52,10 +52,10 @@ DepartmentAutoComplete.propTypes = {
     onNewRequest: React.PropTypes.func.isRequired
 };
 
-export default DepartmentAutoCompleteContainer = createContainer(({direction}) => {
-    const departmentsHandle = Meteor.subscribe('departments.departments', direction._id);
+export default DepartmentAutoCompleteContainer = createContainer(({department}) => {
+    const departmentsHandle = Meteor.subscribe('departments.departments', department._id);
     const loading = !departmentsHandle.ready();
-    const departments = Departments.find({parent_id: direction._id}, {
+    const departments = Departments.find({parent_id: department._id}, {
                 fields: {
                     _id:1,
                     name: 1

@@ -1,29 +1,27 @@
 import React from "react";
 import BaseComponent from '../components/BaseComponent.jsx';
-import DirectionAutoCompleteContainer from '/imports/ui/components/DirectionAutoComplete';
 import DepartmentAutoCompleteContainer from '/imports/ui/components/DepartmentAutoComplete';
 import DatePicker from 'material-ui/DatePicker';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 import Divider from 'material-ui/Divider';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import areIntlLocalesSupported from 'intl-locales-supported';
 import {grey400, grey50} from 'material-ui/styles/colors';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import FontIcon from 'material-ui/FontIcon';
+import Paper from 'material-ui/Paper';
+import {List, ListItem} from 'material-ui/List';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 
 import {Row, Col} from 'react-flexbox-grid';
 
-
-
 let DateTimeFormat;
 
-if (areIntlLocalesSupported(['ru-RU'])) {
-    DateTimeFormat = global.Intl.DateTimeFormat;
-} else {
-    const IntlPolyfill = require('intl');
-    DateTimeFormat = IntlPolyfill.DateTimeFormat;
-    require('intl/locale-data/jsonp/ru-RU');
-}
+const IntlPolyfill = require('intl');
+DateTimeFormat = IntlPolyfill.DateTimeFormat;
+require('intl/locale-data/jsonp/ru-RU');
 
 const style = {
     color: grey400
@@ -37,14 +35,18 @@ const customContentStyle = {
 export default class AddNewInternDialog extends BaseComponent {
     constructor(props) {
         super(props);
-        this.state = {
-            direction:{},
-            department: {},
-            group: {}
-        };
+        this.state = Object.assign(this.state, {
+            direction: props.direction,
+            department: props.department,
+            group: props.group,
+            stages: props.stages,
+            educations: props.educations
+        });
         this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
         this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
         this.onNewRequestGroup = this.onNewRequestGroup.bind(this);
+        this.addStagesTab = this.addStagesTab.bind(this);
+        this.addEducation = this.addEducation.bind(this);
     }
 
     onNewRequestDirection(value) {
@@ -65,6 +67,22 @@ export default class AddNewInternDialog extends BaseComponent {
         })
     }
 
+    addStagesTab() {
+        let newStages = this.state.stages.slice();
+        newStages.push({});
+        this.setState({
+            stages: newStages
+        })
+    }
+
+    addEducation() {
+        let newEducations = this.state.educations.slice();
+        newEducations.push({});
+        this.setState({
+            educations: newEducations
+        })
+    }
+
     render() {
         const actions = [
             <FlatButton
@@ -80,6 +98,151 @@ export default class AddNewInternDialog extends BaseComponent {
                 onTouchTap={this.props.onHide}
             />,
         ];
+
+        const stagesTabs = this.state.stages.map((stage, index)=>{
+            return (
+                <Tab
+                label={"Этап " + (++index)}
+                icon={<FontIcon className="material-icons">book</FontIcon>}
+                key={index}
+                >
+                    <div className="m-r m-l">
+                        <Row>
+                            <Col xs={12} md={6}>
+                                <DatePicker
+                                    floatingLabelText="Дата начала"
+                                    locale="ru-RU"
+                                    DateTimeFormat={DateTimeFormat}
+                                    okLabel="Принять"
+                                    cancelLabel="Отмена"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <DatePicker
+                                    floatingLabelText="Дата окончания"
+                                    locale="ru-RU"
+                                    DateTimeFormat={DateTimeFormat}
+                                    okLabel="Принять"
+                                    cancelLabel="Отмена"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                        </Row>
+                        <h2 className="m-t">ПРОЕКТ</h2>
+                        <Row>
+                            <Col xs={12} md={10}>
+                                <TextField
+                                    className="theme"
+                                    fullWidth={true}
+                                    floatingLabelText="Тема"
+                                />
+                            </Col>
+                            <Col xs={12} md={2}>
+                                <DatePicker
+                                    floatingLabelText="Дата защиты"
+                                    locale="ru-RU"
+                                    DateTimeFormat={DateTimeFormat}
+                                    okLabel="Принять"
+                                    cancelLabel="Отмена"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12}>
+                                <TextField
+                                    floatingLabelText="Принятое решение по итогам защиты"
+                                    multiLine={true}
+                                    rows={3}
+                                    rowsMax={6}
+                                    fullWidth={true}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12}>
+
+                            </Col>
+                        </Row>
+                    </div>
+                </Tab>
+            );
+        });
+        const EducationList = this.state.educations.map((e, i)=>{
+            return (
+                <Card key={i}>
+                    <CardHeader
+                        title=""
+                        actAsExpander={true}
+                        showExpandableButton={true}
+                    />
+                    <CardText expandable={true}>
+                        <Row>
+                            <Col xs={12} sm={4}>
+                                <TextField
+                                    floatingLabelText="ВУЗ"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                            <Col xs={12} sm={4}>
+                                <TextField
+                                    floatingLabelText="Специальность"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                            <Col xs={12} sm={4}>
+                                <TextField
+                                    floatingLabelText="Кафедра"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={6} sm={2}>
+                                <TextField
+                                    floatingLabelText="Курс"
+                                    fullWidth={true}
+                                    type="number"
+                                />
+                            </Col>
+                            <Col xs={12} sm={10}>
+                                <TextField
+                                    floatingLabelText="Тема диплома"
+                                    fullWidth={true}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={6}>
+                                <DatePicker
+                                    floatingLabelText="Год начала обучения"
+                                    locale="ru-RU"
+                                    DateTimeFormat={DateTimeFormat}
+                                    fullWidth={true}
+                                    okLabel="Принять"
+                                    cancelLabel="Отмена"
+                                    openToYearSelection={true}
+                                    formatDate={(date)=>{return date.getFullYear()}}
+                                />
+                            </Col>
+                            <Col xs={6}>
+                                <DatePicker
+                                    floatingLabelText="Год окончания обучения"
+                                    locale="ru-RU"
+                                    DateTimeFormat={DateTimeFormat}
+                                    fullWidth={true}
+                                    okLabel="Принять"
+                                    cancelLabel="Отмена"
+                                    openToYearSelection={true}
+                                    formatDate={(date)=>{return date.getFullYear()}}
+                                />
+                            </Col>
+                        </Row>
+                    </CardText>
+                </Card>
+            )
+        });
         return (
             <div>
                 <Dialog
@@ -94,7 +257,7 @@ export default class AddNewInternDialog extends BaseComponent {
                     contentStyle={customContentStyle}
                     autoScrollBodyContent={true}
                 >
-                    <h3 className="m-t">Общая информация</h3>
+                    <h2 className="m-t">Общая информация</h2>
                     <Row>
                         <Col xs={12} md={9}>
                             <TextField
@@ -136,18 +299,38 @@ export default class AddNewInternDialog extends BaseComponent {
                             </Row>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col xs={12} lg={3}>
+                    <Row middle="xs">
+                        <Col xs={12} md={3}>
                             <DatePicker
                                 floatingLabelText="Дата рождения"
                                 locale="ru-RU"
                                 DateTimeFormat={DateTimeFormat}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
+                                fullWidth={true}
+                            />
+                        </Col>
+                        <Col xs={12} md={3}>
+                            <Checkbox
+                                label="Военнообязанный"
+                                labelPosition="left"
                             />
                         </Col>
                     </Row>
-                    <h3 className="m-t">Информация о работнике</h3>
+                    <h2 className="m-t m-b">
+                        Образование
+                        <FlatButton
+                            label="Добавить"
+                            style={{float: "right"}}
+                            onTouchTap={this.addEducation}
+                        />
+                    </h2>
+                    <Row>
+                        <Col xs={12}>
+                            {EducationList}
+                        </Col>
+                    </Row>
+                    <h2 className="m-t">Информация о работнике</h2>
                     <Row>
                         <Col xs={12} md={6}>
                             <TextField
@@ -170,9 +353,10 @@ export default class AddNewInternDialog extends BaseComponent {
                     </Row>
                     <Row>
                         <Col xs={12} md={4}>
-                            <DirectionAutoCompleteContainer
+                            <DepartmentAutoCompleteContainer
                                 id="orgDirection"
                                 label="Дирекция"
+                                department={{_id: ""}}
                                 onNewRequest={this.onNewRequestDirection}
                             />
                         </Col>
@@ -180,7 +364,7 @@ export default class AddNewInternDialog extends BaseComponent {
                             <DepartmentAutoCompleteContainer
                                 id="orgDepartment"
                                 label="Управление"
-                                direction={this.state.direction}
+                                department={{_id: ""}}
                                 onNewRequest={this.onNewRequestDepartment}
                             />
                         </Col>
@@ -188,18 +372,65 @@ export default class AddNewInternDialog extends BaseComponent {
                             <DepartmentAutoCompleteContainer
                                 id="orgGroup"
                                 label="Отдел"
-                                direction={this.state.department}
+                                department={this.state.department}
                                 onNewRequest={this.onNewRequestGroup}
                             />
                         </Col>
                     </Row>
                     <Row>
-                        <Col lg={12}>
+                        <Col xs={12}>
                             <TextField
                                 id="position"
                                 fullWidth={true}
                                 floatingLabelText="Должность"
                             />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={3}>
+                            <DatePicker
+                                floatingLabelText="Дата трудоустройства"
+                                locale="ru-RU"
+                                DateTimeFormat={DateTimeFormat}
+                                okLabel="Принять"
+                                cancelLabel="Отмена"
+                                fullWidth={true}
+                            />
+                        </Col>
+                        <Col xs={12} md={3}>
+                            <DatePicker
+                                floatingLabelText="Дата увольнения"
+                                locale="ru-RU"
+                                DateTimeFormat={DateTimeFormat}
+                                okLabel="Принять"
+                                cancelLabel="Отмена"
+                                fullWidth={true}
+                            />
+                        </Col>
+                        <Col xs={9} sm={4}>
+                            <TextField
+                                id="tauter"
+                                fullWidth={true}
+                                floatingLabelText="Наставник"
+                            />
+                        </Col>
+                        <Col xs={3} sm={2}>
+                            <FlatButton label="История" fullWidth={true} style={{marginTop: 15}} />
+                        </Col>
+                    </Row>
+                    <h2 className="m-t m-b">Этапы стажировки</h2>
+                    <Row>
+                        <Col xs={12}>
+                            <Paper zDepth={1}>
+                                <Tabs>
+                                    {stagesTabs}
+                                    <Tab
+                                        label="Добавить этап"
+                                        icon={<FontIcon className="material-icons">add</FontIcon>}
+                                        onActive={this.addStagesTab}
+                                    />
+                                </Tabs>
+                            </Paper>
                         </Col>
                     </Row>
                 </Dialog>
@@ -210,4 +441,13 @@ export default class AddNewInternDialog extends BaseComponent {
 
 AddNewInternDialog.propTypes = {
     open: React.PropTypes.bool,
+    onHide: React.PropTypes.func.isRequired
+};
+
+AddNewInternDialog.defaultProps = {
+    direction: {},
+    department: {},
+    group: {},
+    stages: [{}],
+    educations: []
 };
