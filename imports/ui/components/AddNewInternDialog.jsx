@@ -12,8 +12,8 @@ import {grey400, grey50} from 'material-ui/styles/colors';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
-import {List, ListItem} from 'material-ui/List';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import EducationItem from './EducationItem.jsx';
+import ActivityItem from './ActivityItem.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
@@ -40,13 +40,15 @@ export default class AddNewInternDialog extends BaseComponent {
             department: props.department,
             group: props.group,
             stages: props.stages,
-            educations: props.educations
+            educations: props.educations,
+            activities: props.activities
         });
         this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
         this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
         this.onNewRequestGroup = this.onNewRequestGroup.bind(this);
         this.addStagesTab = this.addStagesTab.bind(this);
         this.addEducation = this.addEducation.bind(this);
+        this.addActivities = this.addActivities.bind(this);
     }
 
     componentWillReceiveProps(){
@@ -55,7 +57,8 @@ export default class AddNewInternDialog extends BaseComponent {
             department: this.props.department,
             group: this.props.group,
             stages: this.props.stages,
-            educations: this.props.educations
+            educations: this.props.educations,
+            activities: this.props.activities
         })
     }
 
@@ -90,6 +93,14 @@ export default class AddNewInternDialog extends BaseComponent {
         newEducations.push({});
         this.setState({
             educations: newEducations
+        })
+    }
+
+    addActivities() {
+        let newActivities = this.state.activities.slice();
+        newActivities.push({});
+        this.setState({
+            activities: newActivities
         })
     }
 
@@ -179,78 +190,14 @@ export default class AddNewInternDialog extends BaseComponent {
                 </Tab>
             );
         });
-        const EducationList = this.state.educations.map((e, i)=>{
+        const EducationList = this.state.educations.map((e, index)=>{
             return (
-                <Card key={i}>
-                    <CardHeader
-                        title=""
-                        actAsExpander={true}
-                        showExpandableButton={true}
-                    />
-                    <CardText expandable={true}>
-                        <Row>
-                            <Col xs={12} sm={4}>
-                                <TextField
-                                    floatingLabelText="ВУЗ"
-                                    fullWidth={true}
-                                />
-                            </Col>
-                            <Col xs={12} sm={4}>
-                                <TextField
-                                    floatingLabelText="Специальность"
-                                    fullWidth={true}
-                                />
-                            </Col>
-                            <Col xs={12} sm={4}>
-                                <TextField
-                                    floatingLabelText="Кафедра"
-                                    fullWidth={true}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={6} sm={2}>
-                                <TextField
-                                    floatingLabelText="Курс"
-                                    fullWidth={true}
-                                    type="number"
-                                />
-                            </Col>
-                            <Col xs={12} sm={10}>
-                                <TextField
-                                    floatingLabelText="Тема диплома"
-                                    fullWidth={true}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={6}>
-                                <DatePicker
-                                    floatingLabelText="Год начала обучения"
-                                    locale="ru-RU"
-                                    DateTimeFormat={DateTimeFormat}
-                                    fullWidth={true}
-                                    okLabel="Принять"
-                                    cancelLabel="Отмена"
-                                    openToYearSelection={true}
-                                    formatDate={(date)=>{return date.getFullYear()}}
-                                />
-                            </Col>
-                            <Col xs={6}>
-                                <DatePicker
-                                    floatingLabelText="Год окончания обучения"
-                                    locale="ru-RU"
-                                    DateTimeFormat={DateTimeFormat}
-                                    fullWidth={true}
-                                    okLabel="Принять"
-                                    cancelLabel="Отмена"
-                                    openToYearSelection={true}
-                                    formatDate={(date)=>{return date.getFullYear()}}
-                                />
-                            </Col>
-                        </Row>
-                    </CardText>
-                </Card>
+                <EducationItem key={index} {...e}/>
+            )
+        });
+        const activitiesList = this.state.activities.map((e, index)=>{
+            return (
+                <ActivityItem key={index} {...e}/>
             )
         });
         return (
@@ -428,6 +375,41 @@ export default class AddNewInternDialog extends BaseComponent {
                             <FlatButton label="История" fullWidth={true} style={{marginTop: 15}} />
                         </Col>
                     </Row>
+                    <Row>
+                        <Col xs={12} sm={6}>
+                            <DatePicker
+                                floatingLabelText="Дата начала ШЕ"
+                                locale="ru-RU"
+                                DateTimeFormat={DateTimeFormat}
+                                okLabel="Принять"
+                                cancelLabel="Отмена"
+                                fullWidth={true}
+                            />
+                        </Col>
+                        <Col xs={12} sm={6}>
+                            <DatePicker
+                                floatingLabelText="Дата окончания ШЕ"
+                                locale="ru-RU"
+                                DateTimeFormat={DateTimeFormat}
+                                okLabel="Принять"
+                                cancelLabel="Отмена"
+                                fullWidth={true}
+                            />
+                        </Col>
+                    </Row>
+                    <h2 className="m-t m-b">
+                        Активности
+                        <FlatButton
+                            label="Добавить"
+                            style={{float: "right"}}
+                            onTouchTap={this.addActivities}
+                        />
+                    </h2>
+                    <Row>
+                        <Col xs={12}>
+                            {activitiesList}
+                        </Col>
+                    </Row>
                     <h2 className="m-t m-b">Этапы стажировки</h2>
                     <Row>
                         <Col xs={12}>
@@ -459,5 +441,6 @@ AddNewInternDialog.defaultProps = {
     department: {},
     group: {},
     stages: [{}],
-    educations: []
+    educations: [],
+    activities: [],
 };
