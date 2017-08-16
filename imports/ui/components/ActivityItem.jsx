@@ -44,7 +44,6 @@ export default class ActivityItem extends BaseComponent {
     }
 
     onChangeSelect(e, key, value){
-        console.log(e);
         this.setState({
             type: value,
             typeName: e.target.innerText
@@ -60,8 +59,8 @@ export default class ActivityItem extends BaseComponent {
                     showExpandableButton={true}
                 />
                 <CardText expandable={true}>
-                    <Row>
-                        <Col xs={12} sm={4}>
+                    <Row bottom="xs">
+                        <Col xs={12} sm={3}>
                             <DropDownMenu
                                 value={this.state.type}
                                 id="type"
@@ -77,7 +76,7 @@ export default class ActivityItem extends BaseComponent {
                                 <MenuItem value={6} primaryText="Встреча с руководителем"/>
                             </DropDownMenu>
                         </Col>
-                        <Col xs={12} sm={8}>
+                        <Col xs={12} sm={9}>
                             <TextField
                                 floatingLabelText="Название мероприятия"
                                 fullWidth={true}
