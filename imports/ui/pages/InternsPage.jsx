@@ -4,7 +4,7 @@ import BaseComponent from '../components/BaseComponent.jsx';
 import TodoItem from '../components/TodoItem.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import Message from '../components/Message.jsx';
-import AddNewInternDialog from '../components/AddNewInternDialog.jsx';
+import InternDialog from '../components/InternDialog.jsx';
 import MobileMenu from '../components/MobileMenu.jsx';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -76,7 +76,7 @@ export default class InternsPage extends BaseComponent {
             <MobileMenu />
         </nav>
         <div className="content-scrollable list-items">
-            <AddNewInternDialog open={this.state.open} onHide={this.onHideModal}/>
+            <InternDialog open={this.state.open} onHide={this.onHideModal}/>
           {loading
             ? <Message title={i18n.__('pages.listPage.loading')} />
             : Interns}

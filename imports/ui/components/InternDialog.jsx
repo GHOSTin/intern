@@ -51,7 +51,7 @@ const directionsList = [
     {id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
 ];
 
-export default class AddNewInternDialog extends BaseComponent {
+export default class InternDialog extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = Object.assign(this.state, {
@@ -482,12 +482,12 @@ export default class AddNewInternDialog extends BaseComponent {
     }
 }
 
-AddNewInternDialog.propTypes = {
+InternDialog.propTypes = {
     open: React.PropTypes.bool,
     onHide: React.PropTypes.func.isRequired
 };
 
-AddNewInternDialog.defaultProps = {
+InternDialog.defaultProps = {
     direction: {},
     department: {},
     group: {},

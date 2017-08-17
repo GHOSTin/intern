@@ -29,7 +29,7 @@ class InternsCollection extends Mongo.Collection {
     }
 }
 
-export const Interns = new InternsCollection('Interns');
+export const Interns = new InternsCollection('interns');
 
 // Deny all client-side updates since we will be using methods to manage this collection
 Interns.deny({

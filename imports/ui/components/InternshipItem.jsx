@@ -27,7 +27,8 @@ export default class InternshipItem extends BaseComponent {
         };
 
         this.onChangeInput = this.onChangeInput.bind(this);
-        this.onChangeDate = this.onChangeDate.bind(this);
+        this.onChangeStartDate = this.onChangeStartDate.bind(this);
+        this.onChangeEndDate = this.onChangeEndDate.bind(this);
     }
 
     onChangeInput(e) {
@@ -36,9 +37,15 @@ export default class InternshipItem extends BaseComponent {
         })
     }
 
-    onChangeDate(x, date){
+    onChangeStartDate(x, date){
         this.setState({
-            date: date
+            dateStart: date
+        })
+    }
+
+    onChangeEndDate(x, date){
+        this.setState({
+            dateEnd: date
         })
     }
 
@@ -86,7 +93,7 @@ export default class InternshipItem extends BaseComponent {
                                 cancelLabel="Отмена"
                                 value={this.state.dateStart}
                                 id="dateStart"
-                                onChange={this.onChangeDate}
+                                onChange={this.onChangeStartDate}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
@@ -99,7 +106,7 @@ export default class InternshipItem extends BaseComponent {
                                 cancelLabel="Отмена"
                                 value={this.state.dateEnd}
                                 id="dateEnd"
-                                onChange={this.onChangeDate}
+                                onChange={this.onChangeEndDate}
                             />
                         </Col>
                     </Row>
