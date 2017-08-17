@@ -7,6 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import Divider from 'material-ui/Divider';
+import AutoComplete from 'material-ui/AutoComplete';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import {grey400, grey50} from 'material-ui/styles/colors';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -14,6 +15,7 @@ import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
 import EducationItem from './EducationItem.jsx';
 import ActivityItem from './ActivityItem.jsx';
+import InternshipItem from './InternshipItem.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
@@ -32,6 +34,23 @@ const customContentStyle = {
     maxWidth: 'none',
 };
 
+const dataSourceConfig = {
+    text: 'name',
+    value: 'id'
+};
+
+const directionsList = [
+    {id: 1, name: "Департамент по стратегии и развития бизнесу"},
+    {id: 2, name: "Техническая дирекция"},
+    {id: 3, name: "Коммерческая дирекция"},
+    {id: 4, name: "Управляющая дирекция"},
+    {id: 5, name: "Служба главного инженера"},
+    {id: 6, name: "Дирекция по персоналу"},
+    {id: 7, name: "Дирекция по управлению цепью поставок"},
+    {id: 8, name: "Дирекция по финансам и экономике"},
+    {id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
+];
+
 export default class AddNewInternDialog extends BaseComponent {
     constructor(props) {
         super(props);
@@ -41,7 +60,8 @@ export default class AddNewInternDialog extends BaseComponent {
             group: props.group,
             stages: props.stages,
             educations: props.educations,
-            activities: props.activities
+            activities: props.activities,
+            internships: props.internships
         });
         this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
         this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
@@ -49,6 +69,7 @@ export default class AddNewInternDialog extends BaseComponent {
         this.addStagesTab = this.addStagesTab.bind(this);
         this.addEducation = this.addEducation.bind(this);
         this.addActivities = this.addActivities.bind(this);
+        this.addInternships = this.addInternships.bind(this);
     }
 
     componentWillReceiveProps(){
@@ -58,7 +79,8 @@ export default class AddNewInternDialog extends BaseComponent {
             group: this.props.group,
             stages: this.props.stages,
             educations: this.props.educations,
-            activities: this.props.activities
+            activities: this.props.activities,
+            internships: this.props.internships
         })
     }
 
@@ -101,6 +123,14 @@ export default class AddNewInternDialog extends BaseComponent {
         newActivities.push({});
         this.setState({
             activities: newActivities
+        })
+    }
+
+    addInternships() {
+        let newInternships = this.state.internships.slice();
+        newInternships.push({});
+        this.setState({
+            internships: newInternships
         })
     }
 
@@ -198,6 +228,11 @@ export default class AddNewInternDialog extends BaseComponent {
         const activitiesList = this.state.activities.map((e, index)=>{
             return (
                 <ActivityItem key={index} {...e}/>
+            )
+        });
+        const internshipsList = this.state.internships.map((e, index)=>{
+            return (
+                <InternshipItem key={index} {...e}/>
             )
         });
         return (
@@ -310,11 +345,14 @@ export default class AddNewInternDialog extends BaseComponent {
                     </Row>
                     <Row>
                         <Col xs={12} md={4}>
-                            <DepartmentAutoCompleteContainer
+                            <AutoComplete
+                                dataSource={directionsList}
+                                dataSourceConfig={dataSourceConfig}
+                                floatingLabelText="Дирекция"
+                                fullWidth={true}
                                 id="orgDirection"
-                                label="Дирекция"
-                                department={{_id: ""}}
                                 onNewRequest={this.onNewRequestDirection}
+                                filter={(text, key)=> {return key.toLowerCase().includes(text.toLowerCase())}}
                             />
                         </Col>
                         <Col xs={12} md={4}>
@@ -425,6 +463,19 @@ export default class AddNewInternDialog extends BaseComponent {
                             </Paper>
                         </Col>
                     </Row>
+                    <h2 className="m-t m-b">
+                        Кроссфункциольные стажировки
+                        <FlatButton
+                            label="Добавить"
+                            style={{float: "right"}}
+                            onTouchTap={this.addInternships}
+                        />
+                    </h2>
+                    <Row>
+                        <Col xs={12}>
+                            {internshipsList}
+                        </Col>
+                    </Row>
                 </Dialog>
             </div>
         )
@@ -443,4 +494,5 @@ AddNewInternDialog.defaultProps = {
     stages: [{}],
     educations: [],
     activities: [],
+    internships: [],
 };
