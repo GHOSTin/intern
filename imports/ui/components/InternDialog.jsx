@@ -61,7 +61,8 @@ export default class InternDialog extends BaseComponent {
             stages: props.stages,
             educations: props.educations,
             activities: props.activities,
-            internships: props.internships
+            internships: props.internships,
+            //intern: props.intern
         });
         this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
         this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
@@ -80,7 +81,8 @@ export default class InternDialog extends BaseComponent {
             stages: this.props.stages,
             educations: this.props.educations,
             activities: this.props.activities,
-            internships: this.props.internships
+            internships: this.props.internships,
+            //intern: this.defaultProps.intern
         })
     }
 
@@ -235,6 +237,8 @@ export default class InternDialog extends BaseComponent {
                 <InternshipItem key={index} {...e}/>
             )
         });
+
+        //const {intern} = this.props;
         return (
             <div>
                 <Dialog
@@ -261,6 +265,7 @@ export default class InternDialog extends BaseComponent {
                                 id="firstname"
                                 fullWidth={true}
                                 floatingLabelText="Имя"
+                                value={intern.firstname}
                             />
                             <TextField
                                 id="middlename"
@@ -484,7 +489,8 @@ export default class InternDialog extends BaseComponent {
 
 InternDialog.propTypes = {
     open: React.PropTypes.bool,
-    onHide: React.PropTypes.func.isRequired
+    onHide: React.PropTypes.func.isRequired,
+    //intern: React.PropTypes.object
 };
 
 InternDialog.defaultProps = {
@@ -495,4 +501,8 @@ InternDialog.defaultProps = {
     educations: [],
     activities: [],
     internships: [],
+    /*intern: {
+        firstname: "",
+        text: ""
+    }*/
 };

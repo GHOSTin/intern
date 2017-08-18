@@ -1,7 +1,7 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
 import BaseComponent from '../components/BaseComponent.jsx';
-import TodoItem from '../components/TodoItem.jsx';
+import InternTableItem from '../components/InternTableItem';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import Message from '../components/Message.jsx';
 import InternDialog from '../components/InternDialog.jsx';
@@ -9,6 +9,7 @@ import MobileMenu from '../components/MobileMenu.jsx';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {lightBlue300} from 'material-ui/styles/colors';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table';
 
 const style = {
     position: "absolute",
@@ -19,22 +20,21 @@ const style = {
 export default class InternsPage extends BaseComponent {
   constructor(props) {
     super(props);
-    this.state = Object.assign(this.state, { editingTodo: null, open: false });
+    this.state = Object.assign(this.state, { editing: undefined, open: false });
     this.onEditingChange = this.onEditingChange.bind(this);
     this.onShowingModal = this.onShowingModal.bind(this);
     this.onHideModal = this.onHideModal.bind(this);
   }
 
-  onEditingChange(id, editing) {
+  onEditingChange(intern, editing) {
     this.setState({
-      editingTodo: editing ? id : null,
+        editing: editing ? intern : undefined,
+        open: true
     });
   }
 
   onShowingModal() {
-      this.setState({
-          open: true
-      });
+      this.onEditingChange(null, false);
   }
 
   onHideModal() {
@@ -60,14 +60,28 @@ export default class InternsPage extends BaseComponent {
         />
       );
     } else {
-        Interns = interns.map(todo => (
-        <TodoItem
-          todo={todo}
-          key={todo._id}
-          editing={todo._id === editingTodo}
-          onEditingChange={this.onEditingChange}
-        />
-      ));
+        Interns = (
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHeaderColumn>#</TableHeaderColumn>
+                        <TableHeaderColumn>ФИО</TableHeaderColumn>
+                        <TableHeaderColumn>Text</TableHeaderColumn>
+                        <TableHeaderColumn> </TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody showRowHover={true}>
+                    {interns.map((intern,index) => (
+                        <InternTableItem
+                            intern={intern}
+                            key={intern._id}
+                            index={index}
+                            onEditingChange={this.onEditingChange}
+                        />
+                    ))}
+                </TableBody>
+            </Table>
+        );
     }
 
     return (
@@ -76,7 +90,6 @@ export default class InternsPage extends BaseComponent {
             <MobileMenu />
         </nav>
         <div className="content-scrollable list-items">
-            <InternDialog open={this.state.open} onHide={this.onHideModal}/>
           {loading
             ? <Message title={i18n.__('pages.listPage.loading')} />
             : Interns}
@@ -88,6 +101,7 @@ export default class InternsPage extends BaseComponent {
           >
             <ContentAdd/>
           </FloatingActionButton>
+          <InternDialog open={this.state.open} onHide={this.onHideModal} intern={this.state.editing}/>
       </div>
     );
   }
