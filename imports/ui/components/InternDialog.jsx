@@ -59,10 +59,10 @@ export default class InternDialog extends BaseComponent {
             department: props.department,
             group: props.group,
             stages: props.stages,
-            educations: props.educations,
+            educations: props.intern.educations,
             activities: props.activities,
             internships: props.internships,
-            //intern: props.intern
+            intern: props.intern
         });
         this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
         this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
@@ -71,18 +71,19 @@ export default class InternDialog extends BaseComponent {
         this.addEducation = this.addEducation.bind(this);
         this.addActivities = this.addActivities.bind(this);
         this.addInternships = this.addInternships.bind(this);
+        this.onChangeHandler = this.onChangeHandler.bind(this);
     }
 
-    componentWillReceiveProps(){
+    componentWillReceiveProps(props){
         this.setState({
-            direction: this.props.direction,
-            department: this.props.department,
-            group: this.props.group,
-            stages: this.props.stages,
-            educations: this.props.educations,
-            activities: this.props.activities,
-            internships: this.props.internships,
-            //intern: this.defaultProps.intern
+            direction: props.direction,
+            department: props.department,
+            group: props.group,
+            stages: props.intern.stages||[{}],
+            activities: props.intern.activities||[],
+            educations: props.intern.educations||[],
+            internships: props.intern.internships||[],
+            intern: props.intern
         })
     }
 
@@ -136,6 +137,13 @@ export default class InternDialog extends BaseComponent {
         })
     }
 
+    onChangeHandler(e) {
+        let intern = _.extend(this.state.intern, {[e.target.id]: e.target.value});
+        this.setState({
+            intern: intern
+        })
+    }
+
     render() {
         const actions = [
             <FlatButton
@@ -151,6 +159,8 @@ export default class InternDialog extends BaseComponent {
                 onTouchTap={this.props.onHide}
             />,
         ];
+
+        let {intern} = this.props;
 
         const stagesTabs = this.state.stages.map((stage, index)=>{
             return (
@@ -237,8 +247,6 @@ export default class InternDialog extends BaseComponent {
                 <InternshipItem key={index} {...e}/>
             )
         });
-
-        //const {intern} = this.props;
         return (
             <div>
                 <Dialog
@@ -257,20 +265,22 @@ export default class InternDialog extends BaseComponent {
                     <Row>
                         <Col xs={12} md={9}>
                             <TextField
-                                id="lastname"
+                                name="lastname"
                                 fullWidth={true}
                                 floatingLabelText="Фамилия"
+                                defaultValue={intern.lastname}
                             />
                             <TextField
-                                id="firstname"
+                                name="firstname"
                                 fullWidth={true}
                                 floatingLabelText="Имя"
-                                value={intern.firstname}
+                                defaultValue={intern.firstname}
                             />
                             <TextField
-                                id="middlename"
+                                name="middlename"
                                 fullWidth={true}
                                 floatingLabelText="Отчество"
+                                defaultValue={intern.middlename}
                             />
                         </Col>
                         <Divider />
@@ -282,7 +292,7 @@ export default class InternDialog extends BaseComponent {
                                     <span style={style}>Пол:</span>
                                 </Col>
                                 <Col xs={12} md={9} className="m-t">
-                                    <RadioButtonGroup name="gender">
+                                    <RadioButtonGroup name="gender" defaultSelected={intern.gender}>
                                         <RadioButton
                                             value="male"
                                             label="Мужской"
@@ -305,12 +315,16 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
+                                name="birthday"
+                                defaultDate={intern.birthday}
                             />
                         </Col>
                         <Col xs={12} md={3}>
                             <Checkbox
                                 label="Военнообязанный"
                                 labelPosition="left"
+                                name="army"
+                                defaultChecked={intern.army}
                             />
                         </Col>
                     </Row>
@@ -490,7 +504,7 @@ export default class InternDialog extends BaseComponent {
 InternDialog.propTypes = {
     open: React.PropTypes.bool,
     onHide: React.PropTypes.func.isRequired,
-    //intern: React.PropTypes.object
+    intern: React.PropTypes.object
 };
 
 InternDialog.defaultProps = {
@@ -501,8 +515,10 @@ InternDialog.defaultProps = {
     educations: [],
     activities: [],
     internships: [],
-    /*intern: {
+    intern: {
         firstname: "",
-        text: ""
-    }*/
+        text: "",
+        birthday: undefined,
+        educations: []
+    }
 };

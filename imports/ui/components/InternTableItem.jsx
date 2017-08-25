@@ -13,16 +13,16 @@ export default class InternTableItem extends BaseComponent {
     }
 
     onClickHandler(){
-        //this.props.onEditingChange(this.props.intern, true);
+        this.props.onEditingChange(this.props.intern, true);
     }
 
     render() {
-        //const { intern, index } = this.props;
+        const { intern, index } = this.props;
         return (
-            <TableRow>
-                <TableRowColumn>{/*index+1*/}</TableRowColumn>
-                <TableRowColumn>{/*intern.firstname*/}</TableRowColumn>
-                <TableRowColumn>{/*intern.text*/}</TableRowColumn>
+            <TableRow key={index}>
+                <TableRowColumn>{index+1}</TableRowColumn>
+                <TableRowColumn>{intern.firstname}</TableRowColumn>
+                <TableRowColumn>{intern.text}</TableRowColumn>
                 <TableRowColumn style={{overflow: 'visible'}}>
                     <IconButton
                         tooltip="Изменить"

@@ -9,7 +9,9 @@ import MobileMenu from '../components/MobileMenu.jsx';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {lightBlue300} from 'material-ui/styles/colors';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import IconButton from 'material-ui/IconButton';
+import ContentCreate from 'material-ui/svg-icons/content/create';
 
 const style = {
     position: "absolute",
@@ -32,7 +34,6 @@ export default class InternsPage extends BaseComponent {
         open: true
     });
   }
-
   onShowingModal() {
       this.onEditingChange(null, false);
   }
@@ -70,14 +71,22 @@ export default class InternsPage extends BaseComponent {
                         <TableHeaderColumn> </TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
-                <TableBody showRowHover={true}>
+                <TableBody showRowHover={true} displayRowCheckbox={true}>
                     {interns.map((intern,index) => (
-                        <InternTableItem
-                            intern={intern}
-                            key={intern._id}
-                            index={index}
-                            onEditingChange={this.onEditingChange}
-                        />
+                        <TableRow key={intern._id}>
+                            <TableRowColumn>{index+1}</TableRowColumn>
+                            <TableRowColumn>{intern.firstname}</TableRowColumn>
+                            <TableRowColumn>{intern.text}</TableRowColumn>
+                            <TableRowColumn style={{overflow: 'visible'}}>
+                                <IconButton
+                                    tooltip="Изменить"
+                                    tooltipPosition='top-center'
+                                    onClick={() => this.onEditingChange(intern, true)}
+                                >
+                                    <ContentCreate/>
+                                </IconButton>
+                            </TableRowColumn>
+                        </TableRow>
                     ))}
                 </TableBody>
             </Table>
