@@ -31,6 +31,18 @@ export default class EducationItem extends BaseComponent {
         this.onChangeEndDate = this.onChangeEndDate.bind(this);
     }
 
+    componentWillReceiveProps(props){
+        this.setState({
+            university: props.university,
+            speciality: props.speciality,
+            theme: props.theme,
+            startYear: props.startYear,
+            endYear: props.endYear,
+            department: props.department,
+            course: props.course
+        })
+    }
+
     onChangeInput(e) {
         this.setState({
             [e.target.id]: e.target.value
@@ -66,7 +78,7 @@ export default class EducationItem extends BaseComponent {
                                 onChange={this.onChangeInput}
                                 ref={(ref) => this.university = ref}
                                 id="university"
-                                value={this.state.university}
+                                defaultValue={this.state.university}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
@@ -76,7 +88,7 @@ export default class EducationItem extends BaseComponent {
                                 onChange={this.onChangeInput}
                                 ref={(ref) => this.speciality = ref}
                                 id="speciality"
-                                value={this.state.speciality}
+                                defaultValue={this.state.speciality}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
@@ -85,7 +97,7 @@ export default class EducationItem extends BaseComponent {
                                 fullWidth={true}
                                 id="department"
                                 onChange={this.onChangeInput}
-                                value={this.state.department}
+                                defaultValue={this.state.department}
                             />
                         </Col>
                     </Row>
@@ -97,7 +109,7 @@ export default class EducationItem extends BaseComponent {
                                 type="number"
                                 id="course"
                                 onChange={this.onChangeInput}
-                                value={this.state.course}
+                                defaultValue={this.state.course}
                             />
                         </Col>
                         <Col xs={12} sm={10}>
@@ -106,7 +118,7 @@ export default class EducationItem extends BaseComponent {
                                 fullWidth={true}
                                 id="theme"
                                 onChange={this.onChangeInput}
-                                value={this.state.theme}
+                                defaultValue={this.state.theme}
                             />
                         </Col>
                     </Row>
@@ -121,7 +133,7 @@ export default class EducationItem extends BaseComponent {
                                 cancelLabel="Отмена"
                                 openToYearSelection={true}
                                 formatDate={(date)=>{return date.getFullYear()}}
-                                value={this.state.startYear}
+                                defaultDate={this.state.startYear}
                                 id="startYear"
                                 onChange={this.onChangeStartDate}
                             />
@@ -136,7 +148,7 @@ export default class EducationItem extends BaseComponent {
                                 cancelLabel="Отмена"
                                 openToYearSelection={true}
                                 formatDate={(date)=>{return date.getFullYear()}}
-                                value={this.state.endYear}
+                                defaultDate={this.state.endYear}
                                 id="endYear"
                                 onChange={this.onChangeEndDate}
                             />
@@ -150,5 +162,11 @@ export default class EducationItem extends BaseComponent {
 
 
 EducationItem.propTypes = {
-
+    university: "",
+    speciality: "",
+    theme: "",
+    startYear: {},
+    endYear: {},
+    department: "",
+    course: ""
 };

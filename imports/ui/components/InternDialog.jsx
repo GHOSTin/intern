@@ -345,10 +345,11 @@ export default class InternDialog extends BaseComponent {
                     <Row>
                         <Col xs={12} md={6}>
                             <TextField
-                                id="tabelNumber"
+                                name="tabelNumber"
                                 fullWidth={true}
                                 floatingLabelText="Табельный номер"
                                 type="number"
+                                defaultValue={intern.tabel}
                             />
                         </Col>
                         <Col xs={12} md={6}>
@@ -359,6 +360,8 @@ export default class InternDialog extends BaseComponent {
                                 fullWidth={true}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
+                                name="enterDate"
+                                defaultDate={intern.enterDate}
                             />
                         </Col>
                     </Row>
@@ -372,6 +375,7 @@ export default class InternDialog extends BaseComponent {
                                 id="orgDirection"
                                 onNewRequest={this.onNewRequestDirection}
                                 filter={(text, key)=> {return key.toLowerCase().includes(text.toLowerCase())}}
+                                defaultValue={intern.direction}
                             />
                         </Col>
                         <Col xs={12} md={4}>
@@ -380,6 +384,7 @@ export default class InternDialog extends BaseComponent {
                                 label="Управление"
                                 department={{_id: ""}}
                                 onNewRequest={this.onNewRequestDepartment}
+                                defaultValue={intern.department}
                             />
                         </Col>
                         <Col xs={12} md={4}>
@@ -388,6 +393,7 @@ export default class InternDialog extends BaseComponent {
                                 label="Отдел"
                                 department={this.state.department}
                                 onNewRequest={this.onNewRequestGroup}
+                                defaultValue={intern.group}
                             />
                         </Col>
                     </Row>
@@ -397,6 +403,7 @@ export default class InternDialog extends BaseComponent {
                                 id="position"
                                 fullWidth={true}
                                 floatingLabelText="Должность"
+                                defaultValue={intern.position}
                             />
                         </Col>
                     </Row>
