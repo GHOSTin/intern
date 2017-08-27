@@ -37,6 +37,7 @@ export class DepartmentAutoComplete extends BaseComponent {
                     popoverProps={popoverProps}
                     menuProps={menuProps}
                     onNewRequest={this.props.onNewRequest}
+                    searchText={this.props.searchText}
                 />
             </div>
         )
@@ -49,7 +50,8 @@ DepartmentAutoComplete.propTypes = {
     data: React.PropTypes.array,
     label: React.PropTypes.string,
     id: React.PropTypes.string,
-    onNewRequest: React.PropTypes.func.isRequired
+    onNewRequest: React.PropTypes.func.isRequired,
+    searchText: React.PropTypes.string
 };
 
 export default DepartmentAutoCompleteContainer = createContainer(({department}) => {

@@ -24,18 +24,15 @@ export default class InternsPage extends BaseComponent {
     super(props);
     this.state = Object.assign(this.state, { editing: undefined, open: false });
     this.onEditingChange = this.onEditingChange.bind(this);
-    this.onShowingModal = this.onShowingModal.bind(this);
     this.onHideModal = this.onHideModal.bind(this);
   }
 
   onEditingChange(intern, editing) {
     this.setState({
-        editing: editing ? intern : undefined,
-        open: true
+        intern: editing ? intern : undefined,
+        open: true,
+        editing: editing
     });
-  }
-  onShowingModal() {
-      this.onEditingChange(null, false);
   }
 
   onHideModal() {
@@ -46,7 +43,6 @@ export default class InternsPage extends BaseComponent {
 
   render() {
     const { loading, listExists, interns } = this.props;
-    const { editingTodo } = this.state;
 
     if (!listExists) {
       return <NotFoundPage />;
@@ -67,7 +63,7 @@ export default class InternsPage extends BaseComponent {
                     <TableRow>
                         <TableHeaderColumn>#</TableHeaderColumn>
                         <TableHeaderColumn>ФИО</TableHeaderColumn>
-                        <TableHeaderColumn>Text</TableHeaderColumn>
+                        <TableHeaderColumn>№ этапа</TableHeaderColumn>
                         <TableHeaderColumn> </TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
@@ -75,8 +71,8 @@ export default class InternsPage extends BaseComponent {
                     {interns.map((intern,index) => (
                         <TableRow key={intern._id}>
                             <TableRowColumn>{index+1}</TableRowColumn>
-                            <TableRowColumn>{intern.firstname}</TableRowColumn>
-                            <TableRowColumn>{intern.text}</TableRowColumn>
+                            <TableRowColumn>{intern.lastname} {intern.firstname} {intern.middlename}</TableRowColumn>
+                            <TableRowColumn>{intern.stages.length}</TableRowColumn>
                             <TableRowColumn style={{overflow: 'visible'}}>
                                 <IconButton
                                     tooltip="Изменить"
@@ -105,12 +101,12 @@ export default class InternsPage extends BaseComponent {
         </div>
           <FloatingActionButton
               backgroundColor={lightBlue300}
-              onTouchTap={this.onShowingModal}
+              onTouchTap={() => this.onEditingChange({}, false)}
               style={style}
           >
             <ContentAdd/>
           </FloatingActionButton>
-          <InternDialog open={this.state.open} onHide={this.onHideModal} intern={this.state.editing}/>
+          <InternDialog open={this.state.open} onHide={this.onHideModal} intern={this.state.intern} editing={this.state.editing}/>
       </div>
     );
   }

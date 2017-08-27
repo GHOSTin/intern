@@ -1,27 +1,11 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Factory } from 'meteor/factory';
-import i18n from 'meteor/universe:i18n';
 
 class InternsCollection extends Mongo.Collection {
     insert(intern, callback, locale = 'ru') {
         const ourIntern = intern;
-        if (!ourIntern.name) {
-            const defaultName = i18n.__(
-                'api.lists.insert.list',
-                null,
-                { _locale: locale }
-            );
-            let nextLetter = 'А';
-            ourIntern.name = `${defaultName} ${nextLetter}`;
-
-            while (this.findOne({ name: ourIntern.name })) {
-                // not going to be too smart here, can go past Z
-                nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
-                ourIntern.name = `${defaultName} ${nextLetter}`;
-            }
-        }
-
+        ourIntern.createdAt = ourIntern.createdAt || new Date();
         return super.insert(ourIntern, callback);
     }
     remove(selector, callback) {
@@ -39,9 +23,71 @@ Interns.deny({
 });
 
 Interns.schema = new SimpleSchema({
-    name: { type: String },
-    incompleteCount: { type: Number, defaultValue: 0 },
-    userId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
+    firstname: {
+        type: String,
+    },
+    lastname: {
+        type: String,
+    },
+    middlename: {
+        type: String,
+        optional: true
+    },
+    birthday: {
+        type: Match.OneOf(null, Date),
+    },
+    educations: {
+        type: Array,
+        optional: true
+    },
+    "educations.$": {
+        type: Object,
+    },
+    stages: {
+        type: Array,
+        optional: true
+    },
+    "stages.$": {
+        type: Object,
+    },
+    activities: {
+        type: Array,
+        optional: true
+    },
+    "activities.$": {
+        type: Object,
+    },
+    internships: {
+        type: Array,
+        optional: true
+    },
+    "internships.$": {
+        type: Object,
+    },
+    direction: {
+        type: Match.OneOf(String, Object),
+        optional: true
+    },
+    department: {
+        type: Match.OneOf(String, Object),
+        optional: true
+    },
+    group: {
+        type: Match.OneOf(String, Object),
+        optional: true
+    },
+    gender: {
+        type: String,
+        optional: true
+    },
+    army: {
+        type: Boolean,
+        optional: true
+    },
+    createdAt: {
+        type: Date,
+        denyUpdate: true,
+    },
 });
 
 Interns.attachSchema(Interns.schema);
@@ -50,9 +96,6 @@ Interns.attachSchema(Interns.schema);
 // to the client. If we add secret properties to List objects, don't list
 // them here to keep them private to the server.
 Interns.publicFields = {
-    name: 1,
-    incompleteCount: 1,
-    userId: 1,
 };
 
 Factory.define('intern', Interns, {});

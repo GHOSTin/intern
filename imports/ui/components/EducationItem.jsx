@@ -17,8 +17,8 @@ export default class EducationItem extends BaseComponent {
         university: "",
         speciality: "",
         theme: "",
-        startYear: {},
-        endYear: {},
+        startYear: undefined,
+        endYear: undefined,
         department: "",
         course: ""
     };
@@ -132,10 +132,10 @@ export default class EducationItem extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 openToYearSelection={true}
-                                formatDate={(date)=>{return date.getFullYear()}}
+                                //formatDate={(date)=>{return date?date.getFullYear():""}}
                                 defaultDate={this.state.startYear}
                                 id="startYear"
-                                onChange={this.onChangeStartDate}
+                                //onChange={this.onChangeStartDate}
                             />
                         </Col>
                         <Col xs={6}>
@@ -147,10 +147,10 @@ export default class EducationItem extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 openToYearSelection={true}
-                                formatDate={(date)=>{return date.getFullYear()}}
+                                //formatDate={(date)=>{return date?date.getFullYear():""}}
                                 defaultDate={this.state.endYear}
                                 id="endYear"
-                                onChange={this.onChangeEndDate}
+                                //onChange={this.onChangeEndDate}
                             />
                         </Col>
                     </Row>
@@ -162,11 +162,21 @@ export default class EducationItem extends BaseComponent {
 
 
 EducationItem.propTypes = {
+    university: React.PropTypes.string,
+    speciality: React.PropTypes.string,
+    theme: React.PropTypes.string,
+    startYear: React.PropTypes.object,
+    endYear: React.PropTypes.object,
+    department: React.PropTypes.string,
+    course: React.PropTypes.string
+};
+
+EducationItem.defaultProps ={
     university: "",
     speciality: "",
     theme: "",
-    startYear: {},
-    endYear: {},
+    startYear: null,
+    endYear: null,
     department: "",
     course: ""
 };

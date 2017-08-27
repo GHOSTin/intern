@@ -19,6 +19,9 @@ import InternshipItem from './InternshipItem.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
+import {insert} from '/imports/api/interns/methods'
+import { displayError } from '../helpers/errors.js';
+
 let DateTimeFormat;
 
 const IntlPolyfill = require('intl');
@@ -55,93 +58,66 @@ export default class InternDialog extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = Object.assign(this.state, {
-            direction: props.direction,
-            department: props.department,
-            group: props.group,
-            stages: props.stages,
-            educations: props.intern.educations,
-            activities: props.activities,
-            internships: props.internships,
+            editing: props.editing,
             intern: props.intern
         });
-        this.onNewRequestDirection = this.onNewRequestDirection.bind(this);
-        this.onNewRequestDepartment = this.onNewRequestDepartment.bind(this);
-        this.onNewRequestGroup = this.onNewRequestGroup.bind(this);
-        this.addStagesTab = this.addStagesTab.bind(this);
-        this.addEducation = this.addEducation.bind(this);
-        this.addActivities = this.addActivities.bind(this);
-        this.addInternships = this.addInternships.bind(this);
-        this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.changeHandler = this.changeHandler.bind(this);
+        this.changeHandlerToggle = this.changeHandlerToggle.bind(this);
+        this.changeHandlerNilVal = this.changeHandlerNilVal.bind(this);
+        this.newRequestHandle = this.newRequestHandle.bind(this);
+        this.addNewHandle = this.addNewHandle.bind(this);
     }
 
     componentWillReceiveProps(props){
         this.setState({
-            direction: props.direction,
-            department: props.department,
-            group: props.group,
-            stages: props.intern.stages||[{}],
-            activities: props.intern.activities||[],
-            educations: props.intern.educations||[],
-            internships: props.intern.internships||[],
+            editing: props.editing,
             intern: props.intern
         })
     }
 
-    onNewRequestDirection(value) {
-        this.setState({
-            direction: value
-        });
+    changeHandlerVal(key, attr, value) {
+        let state = {};
+        if (key !== null) {
+            state[key] = this.state[key] || {};
+            state[key][attr] = value;
+        } else {
+            state[attr] = value;
+        }
+        state.lastChange = new Date().now; // ms
+        this.setState(state);
+    };
+
+    changeHandler = function(key, attr, event) {
+        this.changeHandlerVal(key, attr, event.currentTarget.value);
+    };
+
+    changeHandlerToggle = function(key, attr, value) {
+        let state = {};
+        state[key] = this.state[key] || {};
+        state[key][attr] = !state[key][attr];
+        state.lastChange = new Date().now; // ms
+        this.setState(state);
+    };
+
+    changeHandlerNilVal = function(key, attr, nill, value) {
+        this.changeHandlerVal(key, attr, value);
+    };
+
+    newRequestHandle = function(key, attr, value, index){
+        this.changeHandlerVal(key, attr, value);
+    };
+
+    addNewHandle(key, attr) {
+        let newArr = this.state.intern[attr].slice();
+        newArr.push({});
+        this.changeHandlerVal(key, attr, newArr);
     }
 
-    onNewRequestDepartment(value) {
-        this.setState({
-            department: value
-        })
-    }
-
-    onNewRequestGroup(value) {
-        this.setState({
-            group: value
-        })
-    }
-
-    addStagesTab() {
-        let newStages = this.state.stages.slice();
-        newStages.push({});
-        this.setState({
-            stages: newStages
-        })
-    }
-
-    addEducation() {
-        let newEducations = this.state.educations.slice();
-        newEducations.push({});
-        this.setState({
-            educations: newEducations
-        })
-    }
-
-    addActivities() {
-        let newActivities = this.state.activities.slice();
-        newActivities.push({});
-        this.setState({
-            activities: newActivities
-        })
-    }
-
-    addInternships() {
-        let newInternships = this.state.internships.slice();
-        newInternships.push({});
-        this.setState({
-            internships: newInternships
-        })
-    }
-
-    onChangeHandler(e) {
-        let intern = _.extend(this.state.intern, {[e.target.id]: e.target.value});
-        this.setState({
-            intern: intern
-        })
+    handleSave(e){
+        e.preventDefault();
+        console.log(this.state.intern);
+        insert.call({intern: this.state.intern},displayError)
     }
 
     render() {
@@ -156,18 +132,19 @@ export default class InternDialog extends BaseComponent {
                 label="Сохранить"
                 primary={true}
                 keyboardFocused={false}
-                onTouchTap={this.props.onHide}
+                onTouchTap={this.handleSave}
             />,
         ];
 
-        let {intern} = this.props;
+        let {intern} = this.state;
 
-        const stagesTabs = this.state.stages.map((stage, index)=>{
+        const stagesTabs = this.state.intern.stages.map((stage, index)=>{
             return (
                 <Tab
                 label={"Этап " + (++index)}
                 icon={<FontIcon className="material-icons">book</FontIcon>}
                 key={index}
+                title={`stage ${index}`}
                 >
                     <div className="m-r m-l">
                         <Row>
@@ -232,21 +209,22 @@ export default class InternDialog extends BaseComponent {
                 </Tab>
             );
         });
-        const EducationList = this.state.educations.map((e, index)=>{
+        const EducationList = this.state.intern.educations.map((e, index)=>{
             return (
                 <EducationItem key={index} {...e}/>
             )
         });
-        const activitiesList = this.state.activities.map((e, index)=>{
+        const activitiesList = this.state.intern.activities.map((e, index)=>{
             return (
                 <ActivityItem key={index} {...e}/>
             )
         });
-        const internshipsList = this.state.internships.map((e, index)=>{
+        const internshipsList = this.state.intern.internships.map((e, index)=>{
             return (
                 <InternshipItem key={index} {...e}/>
             )
         });
+        let birthday = intern.birthday !== null? new Date(intern.birthday): null;
         return (
             <div>
                 <Dialog
@@ -269,18 +247,21 @@ export default class InternDialog extends BaseComponent {
                                 fullWidth={true}
                                 floatingLabelText="Фамилия"
                                 defaultValue={intern.lastname}
+                                onChange={this.changeHandler.bind(this, 'intern', 'lastname')}
                             />
                             <TextField
                                 name="firstname"
                                 fullWidth={true}
                                 floatingLabelText="Имя"
                                 defaultValue={intern.firstname}
+                                onChange={this.changeHandler.bind(this, 'intern', 'firstname')}
                             />
                             <TextField
                                 name="middlename"
                                 fullWidth={true}
                                 floatingLabelText="Отчество"
                                 defaultValue={intern.middlename}
+                                onChange={this.changeHandler.bind(this, 'intern', 'middlename')}
                             />
                         </Col>
                         <Divider />
@@ -292,7 +273,11 @@ export default class InternDialog extends BaseComponent {
                                     <span style={style}>Пол:</span>
                                 </Col>
                                 <Col xs={12} md={9} className="m-t">
-                                    <RadioButtonGroup name="gender" defaultSelected={intern.gender}>
+                                    <RadioButtonGroup
+                                        name="gender"
+                                        defaultSelected={intern.gender}
+                                        onChange={this.changeHandler.bind(this, 'intern', 'gender')}
+                                    >
                                         <RadioButton
                                             value="male"
                                             label="Мужской"
@@ -316,7 +301,8 @@ export default class InternDialog extends BaseComponent {
                                 cancelLabel="Отмена"
                                 fullWidth={true}
                                 name="birthday"
-                                defaultDate={intern.birthday}
+                                value={birthday}
+                                onChange={this.changeHandlerNilVal.bind(this, 'intern', 'birthday')}
                             />
                         </Col>
                         <Col xs={12} md={3}>
@@ -324,7 +310,8 @@ export default class InternDialog extends BaseComponent {
                                 label="Военнообязанный"
                                 labelPosition="left"
                                 name="army"
-                                defaultChecked={intern.army}
+                                checked={intern.army}
+                                onCheck={this.changeHandlerToggle.bind(this, 'intern', 'army')}
                             />
                         </Col>
                     </Row>
@@ -333,7 +320,7 @@ export default class InternDialog extends BaseComponent {
                         <FlatButton
                             label="Добавить"
                             style={{float: "right"}}
-                            onTouchTap={this.addEducation}
+                            onTouchTap={this.addNewHandle.bind(this, 'intern', 'educations')}
                         />
                     </h2>
                     <Row>
@@ -345,7 +332,7 @@ export default class InternDialog extends BaseComponent {
                     <Row>
                         <Col xs={12} md={6}>
                             <TextField
-                                name="tabelNumber"
+                                ref="tabel"
                                 fullWidth={true}
                                 floatingLabelText="Табельный номер"
                                 type="number"
@@ -360,7 +347,7 @@ export default class InternDialog extends BaseComponent {
                                 fullWidth={true}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
-                                name="enterDate"
+                                ref="enterDate"
                                 defaultDate={intern.enterDate}
                             />
                         </Col>
@@ -372,35 +359,35 @@ export default class InternDialog extends BaseComponent {
                                 dataSourceConfig={dataSourceConfig}
                                 floatingLabelText="Дирекция"
                                 fullWidth={true}
-                                id="orgDirection"
-                                onNewRequest={this.onNewRequestDirection}
+                                name="direction"
+                                onNewRequest={this.newRequestHandle.bind(this, 'intern', 'direction')}
                                 filter={(text, key)=> {return key.toLowerCase().includes(text.toLowerCase())}}
-                                defaultValue={intern.direction}
+                                searchText={(intern.direction)?intern.direction.name:""}
                             />
                         </Col>
                         <Col xs={12} md={4}>
                             <DepartmentAutoCompleteContainer
-                                id="orgDepartment"
+                                name="department"
                                 label="Управление"
                                 department={{_id: ""}}
-                                onNewRequest={this.onNewRequestDepartment}
-                                defaultValue={intern.department}
+                                onNewRequest={this.newRequestHandle.bind(this, 'intern', 'department')}
+                                searchText={(intern.department)?intern.department.name:""}
                             />
                         </Col>
                         <Col xs={12} md={4}>
                             <DepartmentAutoCompleteContainer
-                                id="orgGroup"
+                                name="group"
                                 label="Отдел"
-                                department={this.state.department}
-                                onNewRequest={this.onNewRequestGroup}
-                                defaultValue={intern.group}
+                                department={this.state.intern.department}
+                                onNewRequest={this.newRequestHandle.bind(this, 'intern', 'group')}
+                                searchText={(intern.group)?intern.group.name:""}
                             />
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={12}>
                             <TextField
-                                id="position"
+                                ref="position"
                                 fullWidth={true}
                                 floatingLabelText="Должность"
                                 defaultValue={intern.position}
@@ -416,6 +403,8 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
+                                defaultDate={intern.employmentDate||undefined}
+                                ref="employmentDate"
                             />
                         </Col>
                         <Col xs={12} md={3}>
@@ -426,13 +415,16 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
+                                defaultDate={intern.dismissalDate||undefined}
+                                ref="dismissalDate"
                             />
                         </Col>
                         <Col xs={9} sm={4}>
                             <TextField
-                                id="tauter"
+                                ref="tutor"
                                 fullWidth={true}
                                 floatingLabelText="Наставник"
+                                defaultValue={intern.tutor}
                             />
                         </Col>
                         <Col xs={3} sm={2}>
@@ -466,7 +458,7 @@ export default class InternDialog extends BaseComponent {
                         <FlatButton
                             label="Добавить"
                             style={{float: "right"}}
-                            onTouchTap={this.addActivities}
+                            onTouchTap={this.addNewHandle.bind(this, 'intern', 'activities')}
                         />
                     </h2>
                     <Row>
@@ -483,7 +475,8 @@ export default class InternDialog extends BaseComponent {
                                     <Tab
                                         label="Добавить этап"
                                         icon={<FontIcon className="material-icons">add</FontIcon>}
-                                        onActive={this.addStagesTab}
+                                        onActive={this.addNewHandle.bind(this, 'intern', 'stages')}
+                                        title="add"
                                     />
                                 </Tabs>
                             </Paper>
@@ -494,7 +487,7 @@ export default class InternDialog extends BaseComponent {
                         <FlatButton
                             label="Добавить"
                             style={{float: "right"}}
-                            onTouchTap={this.addInternships}
+                            onTouchTap={this.addNewHandle.bind(this, 'intern', 'internships')}
                         />
                     </h2>
                     <Row>
@@ -515,17 +508,17 @@ InternDialog.propTypes = {
 };
 
 InternDialog.defaultProps = {
-    direction: {},
-    department: {},
-    group: {},
-    stages: [{}],
-    educations: [],
-    activities: [],
-    internships: [],
     intern: {
         firstname: "",
-        text: "",
-        birthday: undefined,
-        educations: []
+        birthday: null,
+        educations: [],
+        stages: [{}],
+        activities: [],
+        internships: [],
+        direction: "",
+        department: "",
+        group: "",
+        gender: "",
+        army: false
     }
 };
