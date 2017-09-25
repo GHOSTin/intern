@@ -55,6 +55,22 @@ const directionsList = [
 ];
 
 export default class InternDialog extends BaseComponent {
+    state = {
+        firstname: "",
+        lastname: "",
+        middlename: "",
+        birthday: null,
+        educations: [],
+        stages: [{}],
+        activities: [],
+        internships: [],
+        direction: "",
+        department: "",
+        group: "",
+        gender: "",
+        army: false
+    };
+
     constructor(props) {
         super(props);
         this.state = Object.assign(this.state, {
@@ -508,7 +524,14 @@ export default class InternDialog extends BaseComponent {
 InternDialog.propTypes = {
     open: React.PropTypes.bool,
     onHide: React.PropTypes.func.isRequired,
-    intern: React.PropTypes.object
+    intern:  React.PropTypes.objectOf(React.PropTypes.shape({
+        firstname: React.PropTypes.any,
+        lastname: React.PropTypes.any,
+        middlename: React.PropTypes.any,
+        direction: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
+        department: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
+        group: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
+    }))
 };
 
 InternDialog.defaultProps = {
@@ -524,5 +547,5 @@ InternDialog.defaultProps = {
         group: "",
         gender: "",
         army: false
-    }
+    },
 };
