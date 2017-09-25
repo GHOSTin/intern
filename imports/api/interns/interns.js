@@ -8,6 +8,9 @@ class InternsCollection extends Mongo.Collection {
         ourIntern.createdAt = ourIntern.createdAt || new Date();
         return super.insert(ourIntern, callback);
     }
+    update(selector, modifier) {
+        return super.update(selector, modifier, {$multi: true, upsert: true});
+    }
     remove(selector, callback) {
         return super.remove(selector, callback);
     }
@@ -87,6 +90,7 @@ Interns.schema = new SimpleSchema({
     createdAt: {
         type: Date,
         denyUpdate: true,
+        optional: true
     },
 });
 

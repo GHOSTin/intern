@@ -19,7 +19,7 @@ import InternshipItem from './InternshipItem.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
-import {insert} from '/imports/api/interns/methods'
+import {insert, update} from '/imports/api/interns/methods'
 import { displayError } from '../helpers/errors.js';
 
 let DateTimeFormat;
@@ -39,19 +39,19 @@ const customContentStyle = {
 
 const dataSourceConfig = {
     text: 'name',
-    value: 'id'
+    value: '_id'
 };
 
 const directionsList = [
-    {id: 1, name: "Департамент по стратегии и развития бизнесу"},
-    {id: 2, name: "Техническая дирекция"},
-    {id: 3, name: "Коммерческая дирекция"},
-    {id: 4, name: "Управляющая дирекция"},
-    {id: 5, name: "Служба главного инженера"},
-    {id: 6, name: "Дирекция по персоналу"},
-    {id: 7, name: "Дирекция по управлению цепью поставок"},
-    {id: 8, name: "Дирекция по финансам и экономике"},
-    {id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
+    {_id: 1, name: "Департамент по стратегии и развития бизнесу"},
+    {_id: 2, name: "Техническая дирекция"},
+    {_id: 3, name: "Коммерческая дирекция"},
+    {_id: 4, name: "Управляющая дирекция"},
+    {_id: 5, name: "Служба главного инженера"},
+    {_id: 6, name: "Дирекция по персоналу"},
+    {_id: 7, name: "Дирекция по управлению цепью поставок"},
+    {_id: 8, name: "Дирекция по финансам и экономике"},
+    {_id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
 ];
 
 export default class InternDialog extends BaseComponent {
@@ -117,7 +117,11 @@ export default class InternDialog extends BaseComponent {
     handleSave(e){
         e.preventDefault();
         console.log(this.state.intern);
-        insert.call({intern: this.state.intern},displayError)
+        if(this.props.editing) {
+            update.call({intern: this.state.intern}, displayError)
+        } else {
+            insert.call({intern: this.state.intern}, displayError)
+        }
     }
 
     render() {
