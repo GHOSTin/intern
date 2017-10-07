@@ -6,8 +6,8 @@
       "join": "Регистрация"
     },
     "connectionNotification": {
-      "tryingToConnect": "Попытка соединения",
-      "connectionIssue": "There seems to be a connection issue"
+      "tryingToConnect": "Потеря связи",
+      "connectionIssue": "Установка повторного соединения"
     },
     "listHeader": {
       "deleteConfirm": "Вы уверены что хотите удалить?",

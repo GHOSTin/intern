@@ -39,36 +39,46 @@ const customContentStyle = {
 
 const dataSourceConfig = {
     text: 'name',
-    value: '_id'
+    value: 'id'
 };
 
 const directionsList = [
-    {_id: 1, name: "Департамент по стратегии и развития бизнесу"},
-    {_id: 2, name: "Техническая дирекция"},
-    {_id: 3, name: "Коммерческая дирекция"},
-    {_id: 4, name: "Управляющая дирекция"},
-    {_id: 5, name: "Служба главного инженера"},
-    {_id: 6, name: "Дирекция по персоналу"},
-    {_id: 7, name: "Дирекция по управлению цепью поставок"},
-    {_id: 8, name: "Дирекция по финансам и экономике"},
-    {_id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
+    {id: 1, name: "Департамент по стратегии и развития бизнесу"},
+    {id: 2, name: "Техническая дирекция"},
+    {id: 3, name: "Коммерческая дирекция"},
+    {id: 4, name: "Управляющая дирекция"},
+    {id: 5, name: "Служба главного инженера"},
+    {id: 6, name: "Дирекция по персоналу"},
+    {id: 7, name: "Дирекция по управлению цепью поставок"},
+    {id: 8, name: "Дирекция по финансам и экономике"},
+    {id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
 ];
 
 export default class InternDialog extends BaseComponent {
     state = {
-        firstname: "",
-        lastname: "",
-        middlename: "",
-        birthday: null,
-        educations: [],
-        stages: [{}],
-        activities: [],
-        internships: [],
-        direction: "",
-        department: "",
-        group: "",
-        gender: "",
-        army: false
+        intern: {
+            firstname: "",
+            lastname: "",
+            middlename: "",
+            birthday: null,
+            educations: [],
+            stages: [{}],
+            activities: [],
+            internships: [],
+            direction: "",
+            department: "",
+            group: "",
+            gender: "",
+            army: false,
+            tabel: null,
+            enterDate: null,
+            position: "",
+            employmentDate: null,
+            dismissalDate: null,
+            tutor: "",
+            startSUDate: null,
+            endSUDate: null,
+        }
     };
 
     constructor(props) {
@@ -83,6 +93,8 @@ export default class InternDialog extends BaseComponent {
         this.changeHandlerNilVal = this.changeHandlerNilVal.bind(this);
         this.newRequestHandle = this.newRequestHandle.bind(this);
         this.addNewHandle = this.addNewHandle.bind(this);
+        this.changeHandlerTab = this.changeHandlerTab.bind(this);
+        this.changeHandlerTabNil = this.changeHandlerTabNil.bind(this);
     }
 
     componentWillReceiveProps(props){
@@ -128,12 +140,27 @@ export default class InternDialog extends BaseComponent {
         let newArr = this.state.intern[attr].slice();
         newArr.push({});
         this.changeHandlerVal(key, attr, newArr);
-    }
+    };
+
+    changeHandlerTabVal = (key, attr, index, value) => {
+        const items = this.state.intern[key].slice();
+        items[index][attr] = value;
+
+        this.changeHandlerVal('intern', key, items);
+    };
+
+    changeHandlerTab = function(key, attr, index, event) {
+        this.changeHandlerTabVal(key, attr, index, event.currentTarget.value);
+    };
+
+    changeHandlerTabNil = (key, attr, index, nill, value) => {
+        this.changeHandlerTabVal(key, attr, index, value);
+    };
 
     handleSave(e){
         e.preventDefault();
         console.log(this.state.intern);
-        if(this.props.editing) {
+        if(this.state.editing){
             update.call({intern: this.state.intern}, displayError)
         } else {
             insert.call({intern: this.state.intern}, displayError)
@@ -159,12 +186,13 @@ export default class InternDialog extends BaseComponent {
         let {intern} = this.state;
 
         const stagesTabs = this.state.intern.stages.map((stage, index)=>{
+            let ind = index + 1;
             return (
                 <Tab
-                label={"Этап " + (++index)}
+                label={"Этап " + ind}
                 icon={<FontIcon className="material-icons">book</FontIcon>}
                 key={index}
-                title={`stage ${index}`}
+                title={`stage ${ind}`}
                 >
                     <div className="m-r m-l">
                         <Row>
@@ -176,6 +204,8 @@ export default class InternDialog extends BaseComponent {
                                     okLabel="Принять"
                                     cancelLabel="Отмена"
                                     fullWidth={true}
+                                    value={stage.startDate}
+                                    onChange={this.changeHandlerTabNil.bind(this, 'stages', 'startDate', index)}
                                 />
                             </Col>
                             <Col xs={12} md={6}>
@@ -186,6 +216,8 @@ export default class InternDialog extends BaseComponent {
                                     okLabel="Принять"
                                     cancelLabel="Отмена"
                                     fullWidth={true}
+                                    value={stage.endDate}
+                                    onChange={this.changeHandlerTabNil.bind(this, 'stages', 'endDate', index)}
                                 />
                             </Col>
                         </Row>
@@ -193,9 +225,11 @@ export default class InternDialog extends BaseComponent {
                         <Row>
                             <Col xs={12} md={10}>
                                 <TextField
-                                    className="theme"
+                                    name="theme"
                                     fullWidth={true}
                                     floatingLabelText="Тема"
+                                    value={stage.theme||""}
+                                    onChange={this.changeHandlerTab.bind(this, 'stages', 'theme', index)}
                                 />
                             </Col>
                             <Col xs={12} md={2}>
@@ -206,6 +240,8 @@ export default class InternDialog extends BaseComponent {
                                     okLabel="Принять"
                                     cancelLabel="Отмена"
                                     fullWidth={true}
+                                    value={stage.defendDate}
+                                    onChange={this.changeHandlerTabNil.bind(this, 'stages', 'defendDate', index)}
                                 />
                             </Col>
                         </Row>
@@ -217,6 +253,8 @@ export default class InternDialog extends BaseComponent {
                                     rows={3}
                                     rowsMax={6}
                                     fullWidth={true}
+                                    value={stage.result}
+                                    onChange={this.changeHandlerTab.bind(this, 'stages', 'result', index)}
                                 />
                             </Col>
                         </Row>
@@ -266,21 +304,21 @@ export default class InternDialog extends BaseComponent {
                                 name="lastname"
                                 fullWidth={true}
                                 floatingLabelText="Фамилия"
-                                defaultValue={intern.lastname}
+                                value={intern.lastname}
                                 onChange={this.changeHandler.bind(this, 'intern', 'lastname')}
                             />
                             <TextField
                                 name="firstname"
                                 fullWidth={true}
                                 floatingLabelText="Имя"
-                                defaultValue={intern.firstname}
+                                value={intern.firstname}
                                 onChange={this.changeHandler.bind(this, 'intern', 'firstname')}
                             />
                             <TextField
                                 name="middlename"
                                 fullWidth={true}
                                 floatingLabelText="Отчество"
-                                defaultValue={intern.middlename}
+                                value={intern.middlename}
                                 onChange={this.changeHandler.bind(this, 'intern', 'middlename')}
                             />
                         </Col>
@@ -352,11 +390,12 @@ export default class InternDialog extends BaseComponent {
                     <Row>
                         <Col xs={12} md={6}>
                             <TextField
-                                ref="tabel"
+                                name="tabel"
                                 fullWidth={true}
                                 floatingLabelText="Табельный номер"
                                 type="number"
-                                defaultValue={intern.tabel}
+                                onChange={this.changeHandler.bind(this, 'intern', 'tabel')}
+                                value={intern.tabel}
                             />
                         </Col>
                         <Col xs={12} md={6}>
@@ -367,8 +406,9 @@ export default class InternDialog extends BaseComponent {
                                 fullWidth={true}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
-                                ref="enterDate"
-                                defaultDate={intern.enterDate}
+                                name="enterDate"
+                                value={intern.enterDate}
+                                onChange={this.changeHandlerNilVal.bind(this, 'intern', 'enterDate')}
                             />
                         </Col>
                     </Row>
@@ -389,7 +429,7 @@ export default class InternDialog extends BaseComponent {
                             <DepartmentAutoCompleteContainer
                                 name="department"
                                 label="Управление"
-                                department={{_id: ""}}
+                                department={""}
                                 onNewRequest={this.newRequestHandle.bind(this, 'intern', 'department')}
                                 searchText={(intern.department)?intern.department.name:""}
                             />
@@ -398,7 +438,7 @@ export default class InternDialog extends BaseComponent {
                             <DepartmentAutoCompleteContainer
                                 name="group"
                                 label="Отдел"
-                                department={this.state.intern.department}
+                                department={(intern.department)?intern.department._id:""}
                                 onNewRequest={this.newRequestHandle.bind(this, 'intern', 'group')}
                                 searchText={(intern.group)?intern.group.name:""}
                             />
@@ -407,10 +447,11 @@ export default class InternDialog extends BaseComponent {
                     <Row>
                         <Col xs={12}>
                             <TextField
-                                ref="position"
+                                name="position"
                                 fullWidth={true}
                                 floatingLabelText="Должность"
-                                defaultValue={intern.position}
+                                value={intern.position}
+                                onChange={this.changeHandler.bind(this, 'intern', 'position')}
                             />
                         </Col>
                     </Row>
@@ -423,8 +464,9 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
-                                defaultDate={intern.employmentDate||undefined}
-                                ref="employmentDate"
+                                value={intern.employmentDate}
+                                name="employmentDate"
+                                onChange={this.changeHandlerNilVal.bind(this, 'intern', 'employmentDate')}
                             />
                         </Col>
                         <Col xs={12} md={3}>
@@ -435,16 +477,18 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
-                                defaultDate={intern.dismissalDate||undefined}
-                                ref="dismissalDate"
+                                value={intern.dismissalDate}
+                                name="dismissalDate"
+                                onChange={this.changeHandlerNilVal.bind(this, 'intern', 'dismissalDate')}
                             />
                         </Col>
                         <Col xs={9} sm={4}>
                             <TextField
-                                ref="tutor"
+                                name="tutor"
                                 fullWidth={true}
                                 floatingLabelText="Наставник"
-                                defaultValue={intern.tutor}
+                                value={intern.tutor}
+                                onChange={this.changeHandler.bind(this, 'intern', 'tutor')}
                             />
                         </Col>
                         <Col xs={3} sm={2}>
@@ -460,6 +504,9 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
+                                value={intern.startSUDate}
+                                name="startSUDate"
+                                onChange={this.changeHandlerNilVal.bind(this, 'intern', 'startSUDate')}
                             />
                         </Col>
                         <Col xs={12} sm={6}>
@@ -470,6 +517,9 @@ export default class InternDialog extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 fullWidth={true}
+                                value={intern.endSUDate}
+                                name="endSUDate"
+                                onChange={this.changeHandlerNilVal.bind(this, 'intern', 'endSUDate')}
                             />
                         </Col>
                     </Row>
@@ -521,7 +571,7 @@ export default class InternDialog extends BaseComponent {
     }
 }
 
-InternDialog.propTypes = {
+/*InternDialog.propTypes = {
     open: React.PropTypes.bool,
     onHide: React.PropTypes.func.isRequired,
     intern:  React.PropTypes.objectOf(React.PropTypes.shape({
@@ -532,11 +582,13 @@ InternDialog.propTypes = {
         department: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
         group: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
     }))
-};
+};*/
 
 InternDialog.defaultProps = {
     intern: {
         firstname: "",
+        lastname: "",
+        middlename: "",
         birthday: null,
         educations: [],
         stages: [{}],
@@ -546,6 +598,14 @@ InternDialog.defaultProps = {
         department: "",
         group: "",
         gender: "",
-        army: false
+        army: false,
+        tabel: null,
+        enterDate: null,
+        position: "",
+        employmentDate: null,
+        dismissalDate: null,
+        tutor: "",
+        startSUDate: null,
+        endSUDate: null,
     },
 };

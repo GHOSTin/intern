@@ -4,12 +4,10 @@ import { Factory } from 'meteor/factory';
 
 class InternsCollection extends Mongo.Collection {
     insert(intern, callback, locale = 'ru') {
-        const ourIntern = intern;
-        ourIntern.createdAt = ourIntern.createdAt || new Date();
-        return super.insert(ourIntern, callback);
+        return super.insert(intern, callback);
     }
-    update(selector, modifier) {
-        return super.update(selector, modifier, {$multi: true, upsert: true});
+    update(selector, modifier, callback) {
+        return super.update(selector, modifier, {multi: true}, callback);
     }
     remove(selector, callback) {
         return super.remove(selector, callback);
@@ -47,11 +45,28 @@ Interns.schema = new SimpleSchema({
         type: Object,
     },
     stages: {
-        type: Array,
+        type: [Object],
         optional: true
     },
-    "stages.$": {
-        type: Object,
+    "stages.$.startDate": {
+        type: Date,
+        optional: true
+    },
+    "stages.$.endDate": {
+        type: Date,
+        optional: true
+    },
+    "stages.$.theme": {
+        type: String,
+        optional: true
+    },
+    "stages.$.defendDate": {
+        type: Date,
+        optional: true
+    },
+    "stages.$.result": {
+        type: String,
+        optional: true
     },
     activities: {
         type: Array,
@@ -71,13 +86,31 @@ Interns.schema = new SimpleSchema({
         type: Match.OneOf(String, Object),
         optional: true
     },
+    "direction.id": {
+        type: Number
+    },
+    "direction.name": {
+        type: String
+    },
     department: {
         type: Match.OneOf(String, Object),
         optional: true
     },
+    "department._id": {
+        type: Number
+    },
+    "department.name": {
+        type: String
+    },
     group: {
         type: Match.OneOf(String, Object),
         optional: true
+    },
+    "group._id": {
+        type: Number
+    },
+    "group.name": {
+        type: String
     },
     gender: {
         type: String,
@@ -87,10 +120,46 @@ Interns.schema = new SimpleSchema({
         type: Boolean,
         optional: true
     },
+    tabel: {
+        type: SimpleSchema.Integer,
+        optional: true
+    },
+    enterDate: {
+        type: Date,
+        optional: true
+    },
+    position: {
+        type: String,
+        optional: true
+    },
+    employmentDate: {
+        type: Date,
+        optional: true
+    },
+    dismissalDate: {
+        type: Date,
+        optional: true
+    },
+    tutor: {
+        type: String,
+        optional: true
+    },
+    startSUDate: {
+        type: Date,
+        optional: true
+    },
+    endSUDate: {
+        type: Date,
+        optional: true
+    },
     createdAt: {
         type: Date,
         denyUpdate: true,
-        optional: true
+        autoValue: function() {
+            if ( this.isInsert ) {
+                return new Date;
+            }
+        }
     },
 });
 

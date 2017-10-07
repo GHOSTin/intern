@@ -96,7 +96,7 @@ export default class InternsPage extends BaseComponent {
         </nav>
         <div className="content-scrollable list-items">
           {loading
-            ? <Message title={i18n.__('pages.listPage.loading')} />
+            ? <Message title={i18n.__('pages.InternsPage.loading')} />
             : Interns}
         </div>
           <FloatingActionButton
