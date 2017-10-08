@@ -207,6 +207,11 @@ Interns.schema = new SimpleSchema({
         type: Date,
         optional: true
     },
+    avatar: {
+        type: String,
+        optional: true,
+        defaultValue: "/default-userAvatar.png"
+    },
     createdAt: {
         type: Date,
         denyUpdate: true,

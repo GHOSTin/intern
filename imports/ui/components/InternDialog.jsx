@@ -13,6 +13,8 @@ import {grey400, grey50} from 'material-ui/styles/colors';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
+import Avatar from 'material-ui/Avatar';
+import {AvatarCropper, FileUpload} from './ImageUploader.jsx';
 import EducationItem from './EducationItem.jsx';
 import ActivityItem from './ActivityItem.jsx';
 import InternshipItem from './InternshipItem.jsx';
@@ -78,7 +80,10 @@ export default class InternDialog extends BaseComponent {
             tutor: "",
             startSUDate: null,
             endSUDate: null,
-        }
+            avatar: "/default-userAvatar.png",
+        },
+        cropperOpen: false,
+        img: null
     };
 
     constructor(props) {
@@ -88,6 +93,7 @@ export default class InternDialog extends BaseComponent {
             intern: props.intern
         });
         this.handleSave = this.handleSave.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
         this.changeHandlerToggle = this.changeHandlerToggle.bind(this);
         this.changeHandlerNilVal = this.changeHandlerNilVal.bind(this);
@@ -166,7 +172,24 @@ export default class InternDialog extends BaseComponent {
             insert.call({intern: this.state.intern}, displayError)
         }
         this.props.onHide()
-    }
+    };
+
+    handleFileChange(dataURI) {
+        this.changeHandlerVal(null, "img", dataURI);
+        this.changeHandlerVal(null, "cropperOpen", true);
+        this.changeHandlerVal("intern", "avatar", this.state.intern.avatar);
+    };
+
+    handleCrop(dataURI) {
+        this.changeHandlerVal(null, "img", null);
+        this.changeHandlerVal(null, "cropperOpen", false);
+        this.changeHandlerVal("intern", "avatar", dataURI);
+    };
+    handleRequestHide() {
+        this.setState({
+            cropperOpen: false
+        });
+    };
 
     render() {
         const actions = [
@@ -322,6 +345,47 @@ export default class InternDialog extends BaseComponent {
                                 value={intern.middlename}
                                 onChange={this.changeHandler.bind(this, 'intern', 'middlename')}
                             />
+                        </Col>
+                        <Col xs={12} md={3}>
+                            <div>
+                                <div className="avatar-photo" 
+                                     style={{
+                                        "position": "relative",
+                                        "width": 150,
+                                        "margin": "0 auto"
+                                     }}
+                                >
+                                    <FileUpload 
+                                        handleFileChange={this.handleFileChange}
+                                    />
+                                    <div className="avatar-edit">
+                                        <FontIcon
+                                            className="material-icons"
+                                            style={{
+                                                "font-size": 94,
+                                                "position": "absolute",
+                                                "top": 24,
+                                                "right": 28
+                                            }}
+                                            color={"rgba(255,255,255,.2)"}
+                                            hoverColor={"rgba(255,255,255,.8)"}
+                                        >
+                                            camera_enhance
+                                        </FontIcon>
+                                    </div>
+                                    <Avatar size={150} src={intern.avatar}/>
+                                </div>
+                                {this.state.cropperOpen &&
+                                <AvatarCropper
+                                    onRequestHide={this.handleRequestHide.bind(this)}
+                                    cropperOpen={this.state.cropperOpen}
+                                    onCrop={this.handleCrop.bind(this)}
+                                    image={this.state.img}
+                                    width={300}
+                                    height={300}
+                                />
+                                }
+                            </div>
                         </Col>
                         <Divider />
                     </Row>
@@ -608,5 +672,6 @@ InternDialog.defaultProps = {
         tutor: "",
         startSUDate: null,
         endSUDate: null,
+        avatar: "/default-userAvatar.png",
     },
 };
