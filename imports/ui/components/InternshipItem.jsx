@@ -19,41 +19,24 @@ export default class InternshipItem extends BaseComponent {
     constructor(props) {
         super(props);
 
-        this.state={
-            place: props.place,
-            tutor: props.tutor,
-            dateStart: props.dateStart,
-            dateEnd: props.dateEnd,
-        };
-
         this.onChangeInput = this.onChangeInput.bind(this);
-        this.onChangeStartDate = this.onChangeStartDate.bind(this);
-        this.onChangeEndDate = this.onChangeEndDate.bind(this);
+        this.onChangeDate = this.onChangeDate.bind(this);
     }
 
     onChangeInput(e) {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
+        this.props.changeHandler('internships',e.currentTarget.name,e.currentTarget.value)
     }
 
-    onChangeStartDate(x, date){
-        this.setState({
-            dateStart: date
-        })
+    onChangeDate(name, nill, value){
+        this.props.changeHandler('internships',name,value)
     }
 
-    onChangeEndDate(x, date){
-        this.setState({
-            dateEnd: date
-        })
-    }
 
     render() {
         return (
             <Card>
                 <CardHeader
-                    title={this.state.place + " (" + this.state.tutor + ")"}
+                    title={this.props.place + " (" + this.props.tutor + ")"}
                     actAsExpander={true}
                     showExpandableButton={true}
                 />
@@ -64,11 +47,10 @@ export default class InternshipItem extends BaseComponent {
                                 floatingLabelText="Место стажировки"
                                 fullWidth={true}
                                 onChange={this.onChangeInput}
-                                ref={(ref) => this.place = ref}
-                                id="place"
+                                name="place"
                                 multiLine={true}
                                 rows={2}
-                                value={this.state.place}
+                                value={this.props.place}
                             />
                         </Col>
                     </Row>
@@ -78,9 +60,8 @@ export default class InternshipItem extends BaseComponent {
                                 floatingLabelText="Куратор"
                                 fullWidth={true}
                                 onChange={this.onChangeInput}
-                                ref={(ref) => this.tutor = ref}
-                                id="tutor"
-                                value={this.state.tutor}
+                                name="tutor"
+                                value={this.props.tutor}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
@@ -91,9 +72,9 @@ export default class InternshipItem extends BaseComponent {
                                 fullWidth={true}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
-                                value={this.state.dateStart}
-                                id="dateStart"
-                                onChange={this.onChangeStartDate}
+                                value={this.props.startDate}
+                                name="startDate"
+                                onChange={this.onChangeDate.bind(this, 'startDate')}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
@@ -104,9 +85,9 @@ export default class InternshipItem extends BaseComponent {
                                 fullWidth={true}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
-                                value={this.state.dateEnd}
-                                id="dateEnd"
-                                onChange={this.onChangeEndDate}
+                                value={this.props.endDate}
+                                name="endDate"
+                                onChange={this.onChangeDate.bind(this, 'endDate')}
                             />
                         </Col>
                     </Row>
@@ -118,12 +99,15 @@ export default class InternshipItem extends BaseComponent {
 
 
 InternshipItem.propTypes = {
-
+    place: React.PropTypes.string,
+    tutor: React.PropTypes.string,
+    startDate: React.PropTypes.object,
+    endDate: React.PropTypes.object,
 };
 
 InternshipItem.defaultProps = {
     place: "",
     tutor: "",
-    dateStart: {},
-    dateEnd: {},
+    startDate: null,
+    endDate: null,
 };

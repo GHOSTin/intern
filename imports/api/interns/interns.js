@@ -38,11 +38,36 @@ Interns.schema = new SimpleSchema({
         type: Match.OneOf(null, Date),
     },
     educations: {
-        type: Array,
+        type: [Object],
         optional: true
     },
-    "educations.$": {
-        type: Object,
+    "educations.$.university": {
+        type: String,
+        optional: true
+    },
+    "educations.$.speciality": {
+        type: String,
+        optional: true
+    },
+    "educations.$.theme": {
+        type: String,
+        optional: true
+    },
+    "educations.$.startYear": {
+        type: Date,
+        optional: true
+    },
+    "educations.$.endYear": {
+        type: Date,
+        optional: true
+    },
+    "educations.$.department": {
+        type: String,
+        optional: true
+    },
+    "educations.$.course": {
+        type: String,
+        optional: true
     },
     stages: {
         type: [Object],
@@ -69,18 +94,48 @@ Interns.schema = new SimpleSchema({
         optional: true
     },
     activities: {
-        type: Array,
+        type: [Object],
         optional: true
     },
-    "activities.$": {
-        type: Object,
+    "activities.$.type": {
+        type: SimpleSchema.Integer,
+        optional: true
+    },
+    "activities.$.typeName": {
+        type: String,
+        optional: true
+    },
+    "activities.$.name": {
+        type: String,
+        optional: true
+    },
+    "activities.$.date": {
+        type: Date,
+        optional: true
+    },
+    "activities.$.trainer": {
+        type: String,
+        optional: true
     },
     internships: {
-        type: Array,
+        type: [Object],
         optional: true
     },
-    "internships.$": {
-        type: Object,
+    "internships.$.place": {
+        type: String,
+        optional: true
+    },
+    "internships.$.tutor": {
+        type: String,
+        optional: true
+    },
+    "internships.$.startDate": {
+        type: Date,
+        optional: true
+    },
+    "internships.$.endDate": {
+        type: Date,
+        optional: true
     },
     direction: {
         type: Match.OneOf(String, Object),

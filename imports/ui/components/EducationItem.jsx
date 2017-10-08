@@ -13,59 +13,26 @@ DateTimeFormat = IntlPolyfill.DateTimeFormat;
 require('intl/locale-data/jsonp/ru-RU');
 
 export default class EducationItem extends BaseComponent {
-    state={
-        university: "",
-        speciality: "",
-        theme: "",
-        startYear: undefined,
-        endYear: undefined,
-        department: "",
-        course: ""
-    };
-
     constructor(props) {
         super(props);
 
         this.onChangeInput = this.onChangeInput.bind(this);
-        this.onChangeStartDate = this.onChangeStartDate.bind(this);
-        this.onChangeEndDate = this.onChangeEndDate.bind(this);
-    }
-
-    componentWillReceiveProps(props){
-        this.setState({
-            university: props.university,
-            speciality: props.speciality,
-            theme: props.theme,
-            startYear: props.startYear,
-            endYear: props.endYear,
-            department: props.department,
-            course: props.course
-        })
+        this.onChangeDate = this.onChangeDate.bind(this);
     }
 
     onChangeInput(e) {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
+        this.props.changeHandler('educations',e.currentTarget.name,e.currentTarget.value)
     }
 
-    onChangeStartDate(x, date){
-        this.setState({
-            startYear: date
-        })
-    }
-
-    onChangeEndDate(x, date){
-        this.setState({
-            endYear: date
-        })
+    onChangeDate(name, nill, value){
+        this.props.changeHandler('educations',name,value)
     }
 
     render() {
         return (
             <Card>
                 <CardHeader
-                    title={this.state.university + " - " + this.state.speciality}
+                    title={this.props.university + " - " + this.props.speciality}
                     actAsExpander={true}
                     showExpandableButton={true}
                 />
@@ -76,9 +43,8 @@ export default class EducationItem extends BaseComponent {
                                 floatingLabelText="ВУЗ"
                                 fullWidth={true}
                                 onChange={this.onChangeInput}
-                                ref={(ref) => this.university = ref}
-                                id="university"
-                                defaultValue={this.state.university}
+                                name="university"
+                                value={this.props.university}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
@@ -86,18 +52,17 @@ export default class EducationItem extends BaseComponent {
                                 floatingLabelText="Специальность"
                                 fullWidth={true}
                                 onChange={this.onChangeInput}
-                                ref={(ref) => this.speciality = ref}
-                                id="speciality"
-                                defaultValue={this.state.speciality}
+                                name="speciality"
+                                value={this.props.speciality}
                             />
                         </Col>
                         <Col xs={12} sm={4}>
                             <TextField
                                 floatingLabelText="Кафедра"
                                 fullWidth={true}
-                                id="department"
+                                name="department"
                                 onChange={this.onChangeInput}
-                                defaultValue={this.state.department}
+                                value={this.props.department}
                             />
                         </Col>
                     </Row>
@@ -107,18 +72,18 @@ export default class EducationItem extends BaseComponent {
                                 floatingLabelText="Курс"
                                 fullWidth={true}
                                 type="number"
-                                id="course"
+                                name="course"
                                 onChange={this.onChangeInput}
-                                defaultValue={this.state.course}
+                                value={this.props.course}
                             />
                         </Col>
                         <Col xs={12} sm={10}>
                             <TextField
                                 floatingLabelText="Тема диплома"
                                 fullWidth={true}
-                                id="theme"
+                                name="theme"
                                 onChange={this.onChangeInput}
-                                defaultValue={this.state.theme}
+                                value={this.props.theme}
                             />
                         </Col>
                     </Row>
@@ -132,10 +97,10 @@ export default class EducationItem extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 openToYearSelection={true}
-                                //formatDate={(date)=>{return date?date.getFullYear():""}}
-                                defaultDate={this.state.startYear}
-                                id="startYear"
-                                //onChange={this.onChangeStartDate}
+                                formatDate={(date)=>{return date?date.getFullYear():""}}
+                                value={this.props.startYear}
+                                name="startYear"
+                                onChange={this.onChangeDate.bind(this, 'startYear')}
                             />
                         </Col>
                         <Col xs={6}>
@@ -147,10 +112,10 @@ export default class EducationItem extends BaseComponent {
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
                                 openToYearSelection={true}
-                                //formatDate={(date)=>{return date?date.getFullYear():""}}
-                                defaultDate={this.state.endYear}
-                                id="endYear"
-                                //onChange={this.onChangeEndDate}
+                                formatDate={(date)=>{return date?date.getFullYear():""}}
+                                value={this.props.endYear}
+                                name="endYear"
+                                onChange={this.onChangeDate.bind(this, 'endYear')}
                             />
                         </Col>
                     </Row>

@@ -165,6 +165,7 @@ export default class InternDialog extends BaseComponent {
         } else {
             insert.call({intern: this.state.intern}, displayError)
         }
+        this.props.onHide()
     }
 
     render() {
@@ -269,17 +270,17 @@ export default class InternDialog extends BaseComponent {
         });
         const EducationList = this.state.intern.educations.map((e, index)=>{
             return (
-                <EducationItem key={index} {...e}/>
+                <EducationItem changeHandler={(key, attr, value) => this.changeHandlerTabVal(key, attr, index, value)} key={index} {...e}/>
             )
         });
         const activitiesList = this.state.intern.activities.map((e, index)=>{
             return (
-                <ActivityItem key={index} {...e}/>
+                <ActivityItem changeHandler={(key, attr, value) => this.changeHandlerTabVal(key, attr, index, value)} key={index} {...e}/>
             )
         });
         const internshipsList = this.state.intern.internships.map((e, index)=>{
             return (
-                <InternshipItem key={index} {...e}/>
+                <InternshipItem changeHandler={(key, attr, value) => this.changeHandlerTabVal(key, attr, index, value)} key={index} {...e}/>
             )
         });
         let birthday = intern.birthday !== null? new Date(intern.birthday): null;

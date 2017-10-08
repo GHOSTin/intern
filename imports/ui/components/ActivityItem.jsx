@@ -15,13 +15,6 @@ DateTimeFormat = IntlPolyfill.DateTimeFormat;
 require('intl/locale-data/jsonp/ru-RU');
 
 export default class ActivityItem extends BaseComponent {
-    state={
-        type: "",
-        name: "",
-        date: {},
-        trainer: "",
-        typeName: ""
-    };
 
     constructor(props) {
         super(props);
@@ -32,29 +25,23 @@ export default class ActivityItem extends BaseComponent {
     }
 
     onChangeInput(e) {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
+        this.props.changeHandler('activities',e.currentTarget.name,e.currentTarget.value)
     }
 
-    onChangeDate(x, date){
-        this.setState({
-            date: date
-        })
+    onChangeDate(name, nill, value){
+        this.props.changeHandler('activities',name,value)
     }
 
-    onChangeSelect(e, key, value){
-        this.setState({
-            type: value,
-            typeName: e.target.innerText
-        })
+    onChangeSelect(name, e, key, value){
+        this.props.changeHandler('activities',name,value);
+        this.props.changeHandler('activities',`${name}Name`,e.target.innerText);
     }
 
     render() {
         return (
             <Card>
                 <CardHeader
-                    title={this.state.typeName + " - " + this.state.name}
+                    title={this.props.typeName + " - " + this.props.name}
                     actAsExpander={true}
                     showExpandableButton={true}
                 />
@@ -62,9 +49,9 @@ export default class ActivityItem extends BaseComponent {
                     <Row bottom="xs">
                         <Col xs={12} sm={3}>
                             <DropDownMenu
-                                value={this.state.type}
-                                id="type"
-                                onChange={this.onChangeSelect}
+                                value={this.props.type}
+                                name="type"
+                                onChange={this.onChangeSelect.bind(this, 'type')}
                                 autoWidth={false}
                                 style={{width: '100%'}}
                             >
@@ -81,9 +68,8 @@ export default class ActivityItem extends BaseComponent {
                                 floatingLabelText="Название мероприятия"
                                 fullWidth={true}
                                 onChange={this.onChangeInput}
-                                ref={(ref) => this.speciality = ref}
-                                id="name"
-                                value={this.state.name}
+                                name="name"
+                                value={this.props.name}
                             />
                         </Col>
                     </Row>
@@ -96,19 +82,18 @@ export default class ActivityItem extends BaseComponent {
                                 fullWidth={true}
                                 okLabel="Принять"
                                 cancelLabel="Отмена"
-                                openToYearSelection={true}
-                                value={this.state.date}
-                                id="date"
-                                onChange={this.onChangeDate}
+                                value={this.props.date}
+                                name="date"
+                                onChange={this.onChangeDate.bind(this, 'date')}
                             />
                         </Col>
                         <Col xs={6} sm={6}>
                             <TextField
                                 floatingLabelText="Тренер/лектор"
                                 fullWidth={true}
-                                id="trainer"
+                                name="trainer"
                                 onChange={this.onChangeInput}
-                                value={this.state.trainer}
+                                value={this.props.trainer}
                             />
                         </Col>
                     </Row>
@@ -120,5 +105,17 @@ export default class ActivityItem extends BaseComponent {
 
 
 ActivityItem.propTypes = {
+    type: React.PropTypes.number,
+    typeName: React.PropTypes.string,
+    name: React.PropTypes.string,
+    date: React.PropTypes.object,
+    trainer: React.PropTypes.string,
+};
 
+ActivityItem.defaultProps ={
+    type: null,
+    typeName: "",
+    name: "",
+    date: null,
+    trainer: ""
 };
