@@ -362,18 +362,15 @@ export default class InternDialog extends BaseComponent {
                                         <FontIcon
                                             className="material-icons"
                                             style={{
-                                                "font-size": 94,
-                                                "position": "absolute",
-                                                "top": 24,
-                                                "right": 28
+                                                "font-size": 66,
+                                                "marginTop": 30,
                                             }}
-                                            color={"rgba(255,255,255,.2)"}
-                                            hoverColor={"rgba(255,255,255,.8)"}
+                                            color={"rgba(255,255,255,.8)"}
                                         >
-                                            camera_enhance
+                                            photo_camera
                                         </FontIcon>
                                     </div>
-                                    <Avatar size={150} src={intern.avatar}/>
+                                    <Avatar size={150} src={intern.avatar} style={{boxShadow: "0 0 1px 6px #e8e8e8"}}/>
                                 </div>
                                 {this.state.cropperOpen &&
                                 <AvatarCropper

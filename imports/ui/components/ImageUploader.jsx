@@ -4,7 +4,7 @@ import BaseComponent from '../components/BaseComponent.jsx';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Slider from 'material-ui/Slider';
-import {Row, Col} from 'react-flexbox-grid';
+import {Row} from 'react-flexbox-grid';
 
 const dataURIPrefixPattern = new RegExp(/data:image\/\w{1,5};base64,\s*/);
 
@@ -108,7 +108,7 @@ class Cropper extends BaseComponent {
         img.src = imageUri;
     }
 
-    mouseDownListener (e) {
+    mouseDownListener () {
         this.setState({
             image: this.state.image,
             dragging: true,
@@ -126,7 +126,7 @@ class Cropper extends BaseComponent {
         }
     }
 
-    mouseUpListener (e) {
+    mouseUpListener () {
         this.setState({ dragging: false, preview: this.toDataURL() });
     }
 
@@ -165,11 +165,8 @@ class Cropper extends BaseComponent {
 
         let scaledWidth = this.state.image.width * this.state.zoom;
         let dw = (scaledWidth - this.state.image.width) / 2;
-        let imageLeftEdge = this.state.image.x - dw;
-        let imageRightEdge = (imageLeftEdge + scaledWidth);
 
         let rightEdge = this.props.width;
-        let leftEdge = 0;
 
         if (newX - dw > 0) { x = dw; }
         else if (newX < (-scaledWidth + rightEdge)) { x = rightEdge - scaledWidth; }
@@ -179,11 +176,8 @@ class Cropper extends BaseComponent {
 
         let scaledHeight = this.state.image.height * this.state.zoom;
         let dh = (scaledHeight - this.state.image.height) / 2;
-        let imageTopEdge = this.state.image.y - dh;
-        let imageBottomEdge = imageTopEdge + scaledHeight;
 
         let bottomEdge = this.props.height;
-        let topEdge = 0;
         if (newY - dh > 0) { y = dh; }
         else if (newY < (-scaledHeight + bottomEdge)) { y = bottomEdge - scaledHeight; }
         else {
@@ -196,7 +190,6 @@ class Cropper extends BaseComponent {
     componentDidMount () {
         this.props.onRef(this);
         let canvas = ReactDom.findDOMNode(this.refs.canvas);
-        let context = canvas.getContext("2d");
         this.prepareImage(this.props.image);
 
         this.listeners = {
@@ -270,6 +263,7 @@ class Cropper extends BaseComponent {
     }
 
     handleZoomUpdate (event, newValue) {
+        event.preventDefault();
         this.setState({zoom: newValue});
     }
 
@@ -305,18 +299,14 @@ Cropper.propTypes = {
     image: React.PropTypes.string.isRequired,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
-    zoom: React.PropTypes.number
+    zoom: React.PropTypes.number,
+    onRef: React.PropTypes.func.isRequired
 };
 Cropper.defaultProps = { width: 400, height: 400, zoom: 1 };
 
 export class AvatarCropper extends BaseComponent {
     constructor () {
         super();
-    }
-
-    handleZoomUpdate () {
-        let zoom = ReactDom.findDOMNode(this.refs.zoom).value;
-        this.setState({ zoom: zoom });
     }
 
     render () {
