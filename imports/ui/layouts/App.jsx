@@ -1,4 +1,9 @@
 import React from 'react';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import ContentCopy from 'material-ui/svg-icons/content/content-copy';
+import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Meteor } from 'meteor/meteor';
@@ -6,9 +11,10 @@ import { Session } from 'meteor/session'; // XXX: SESSION
 import { Lists } from '../../api/lists/lists.js';
 import UserMenu from '../components/UserMenu.jsx';
 import MainMenu from '../components/MainMenu.jsx';
-import ListList from '../components/ListList.jsx';
 import ConnectionNotification from '../components/ConnectionNotification.jsx';
 import Loading from '../components/Loading.jsx';
+
+import { Link } from 'react-router';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
@@ -16,6 +22,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;
+
+const navStyle = {
+    marginTop: 64,
+    height: (window.innerHeight - 64)
+};
 
 export default class App extends React.Component {
   constructor(props) {
@@ -83,29 +94,47 @@ export default class App extends React.Component {
 
     return (
     <MuiThemeProvider>
-    <div className="wrapper">
-      <div id="container page-wrapper" className={menuOpen ? 'menu-open gray-bg' : 'gray-bg'}>
-        <section id="menu">
-          <UserMenu user={user} logout={this.logout} />
-          <MainMenu user={user} />
-        </section>
-          {showConnectionIssue && !connected
-              ? <ConnectionNotification />
-              : null}
-        <div className="content-overlay" onClick={closeMenu} />
-        <div id="content-container">
-          <ReactCSSTransitionGroup
-              transitionName="fade"
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}
-          >
-              {loading
-                  ? <Loading key="loading" />
-                  : clonedChildren}
-          </ReactCSSTransitionGroup>
+      <div>
+        <AppBar
+            title="Title"
+        />
+        <Drawer open={this.state.open} containerStyle={navStyle} zDepth={1} width={270}>
+          <MenuItem leftIcon={<PersonAdd />}>
+            <Link
+              to={`/interns/`}
+              title="Список стажеров"
+              className="list-todo"
+              activeClassName="active"
+            >
+                Список стажеров
+            </Link>
+          </MenuItem>
+          <MenuItem leftIcon={<ContentCopy />}>Отчеты</MenuItem>
+        </Drawer>
+        <div className="wrapper">
+          <div id="container page-wrapper" className={menuOpen ? 'menu-open gray-bg' : 'gray-bg'}>
+            <section id="menu">
+              <UserMenu user={user} logout={this.logout} />
+              <MainMenu user={user} />
+            </section>
+              {showConnectionIssue && !connected
+                  ? <ConnectionNotification />
+                  : null}
+            <div className="content-overlay" onClick={closeMenu} />
+            <div id="content-container">
+              <ReactCSSTransitionGroup
+                  transitionName="fade"
+                  transitionEnterTimeout={200}
+                  transitionLeaveTimeout={200}
+              >
+                  {loading
+                      ? <Loading key="loading" />
+                      : clonedChildren}
+              </ReactCSSTransitionGroup>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
     </MuiThemeProvider>
     );
   }

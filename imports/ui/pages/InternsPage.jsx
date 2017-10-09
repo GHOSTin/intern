@@ -44,7 +44,26 @@ export default class InternsPage extends BaseComponent {
   render() {
     const { loading, listExists, interns } = this.props;
 
-    if (!listExists) {
+    const TABLE_COLUMNS = [
+        {
+            key: 'avatar',
+            label: '',
+            sortable: false,
+        },
+        {
+            key: 'lastname',
+            label: 'Фамилия',
+            sortable: true,
+        },
+        {
+            key: 'stages',
+            label: '№ этапа стажировки',
+            sortable: true,
+            render: (stages, all) => <p>{stages.length}</p>
+        }
+    ];
+
+      if (!listExists) {
       return <NotFoundPage />;
     }
 
@@ -88,6 +107,7 @@ export default class InternsPage extends BaseComponent {
                     ))}
                 </TableBody>
             </Table>
+
         );
     }
 
@@ -108,7 +128,12 @@ export default class InternsPage extends BaseComponent {
           >
             <ContentAdd/>
           </FloatingActionButton>
-          <InternDialog open={this.state.open} onHide={this.onHideModal} intern={this.state.intern} editing={this.state.editing}/>
+          <InternDialog
+              open={this.state.open}
+              onHide={this.onHideModal}
+              intern={this.state.intern}
+              editing={this.state.editing}
+          />
       </div>
     );
   }

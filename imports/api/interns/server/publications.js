@@ -25,5 +25,5 @@ Meteor.publish('interns.private', function listsPrivate() {
 });
 
 Meteor.publish('interns.list', function list() {
-  return Interns.find({}, {$sort: {"createdAt": -1}});
+  return Interns.find({}, {$sort: {"createdAt": 1}});
 });

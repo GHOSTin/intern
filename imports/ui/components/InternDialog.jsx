@@ -37,6 +37,7 @@ const style = {
 const customContentStyle = {
     width: '99%',
     maxWidth: 'none',
+    transform: 'translate(0, 0)'
 };
 
 const dataSourceConfig = {
