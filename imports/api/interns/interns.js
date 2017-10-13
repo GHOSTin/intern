@@ -93,6 +93,10 @@ Interns.schema = new SimpleSchema({
         type: String,
         optional: true
     },
+    "stages.$.presentation": {
+        type: String,
+        optional: true
+    },
     activities: {
         type: [Object],
         optional: true

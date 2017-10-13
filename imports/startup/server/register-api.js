@@ -7,3 +7,5 @@ import '../../api/interns/methods.js';
 import '../../api/interns/server/publications.js';
 //import '../../api/departments/departments.js';
 import '../../api/departments/server/publications.js';
+import '../../api/stages/common.js';
+import '../../api/stages/server/publications.js';
