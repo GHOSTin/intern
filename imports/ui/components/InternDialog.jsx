@@ -14,10 +14,12 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
 import Avatar from 'material-ui/Avatar';
+import Upload from 'material-ui-upload/Upload';
 import {AvatarCropper, FileUpload} from './ImageUploader.jsx';
 import EducationItem from './EducationItem.jsx';
 import ActivityItem from './ActivityItem.jsx';
 import InternshipItem from './InternshipItem.jsx';
+import StagePresentation from './StagePresentationUpload.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
@@ -284,8 +286,11 @@ export default class InternDialog extends BaseComponent {
                             </Col>
                         </Row>
                         <Row>
-                            <Col xs={12}>
-
+                            <Col xs={12} md={8}>
+                                <StagePresentation
+                                    presentation={stage.presentation||""}
+                                    changeHandler={this.changeHandlerTabVal.bind(this, 'stages', 'presentation', index)}
+                                />
                             </Col>
                         </Row>
                     </div>
@@ -363,7 +368,7 @@ export default class InternDialog extends BaseComponent {
                                         <FontIcon
                                             className="material-icons"
                                             style={{
-                                                "font-size": 66,
+                                                "fontSize": 66,
                                                 "marginTop": 30,
                                             }}
                                             color={"rgba(255,255,255,.8)"}

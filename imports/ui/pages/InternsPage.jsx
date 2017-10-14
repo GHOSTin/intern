@@ -143,4 +143,5 @@ InternsPage.propTypes = {
   loading: React.PropTypes.bool,
   listExists: React.PropTypes.bool,
   interns: React.PropTypes.array,
+  presentations: React.PropTypes.object
 };

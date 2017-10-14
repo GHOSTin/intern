@@ -5,6 +5,7 @@ import InternsPage from '../pages/InternsPage';
 
 const InternsPageContainer = createContainer(() => {
     const internsHandler = Meteor.subscribe('interns.list');
+    const presentations = Meteor.subscribe('interns.presentations');
     const loading = !internsHandler.ready();
     const interns = Interns.find({});
     const listExists = !loading && !!interns;
@@ -12,6 +13,7 @@ const InternsPageContainer = createContainer(() => {
         loading,
         listExists: true,
         interns: listExists ? interns.fetch() : [],
+        presentations
     };
 }, InternsPage);
 
