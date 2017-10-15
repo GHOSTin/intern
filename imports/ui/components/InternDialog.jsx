@@ -288,7 +288,7 @@ export default class InternDialog extends BaseComponent {
                         <Row>
                             <Col xs={12} md={8}>
                                 <StagePresentation
-                                    presentation={stage.presentation||""}
+                                    presentation={stage.presentation||null}
                                     changeHandler={this.changeHandlerTabVal.bind(this, 'stages', 'presentation', index)}
                                 />
                             </Col>

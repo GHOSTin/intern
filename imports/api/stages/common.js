@@ -1,5 +1,5 @@
 export const Presentation = new FS.Collection("presentation", {
-    stores: [new FS.Store.FileSystem("presentation", {path: "~/uploads"})]
+    stores: [new FS.Store.FileSystem("presentation", {path: "/uploads"})]
 });
 
 Presentation.deny({
@@ -11,11 +11,8 @@ Presentation.deny({
     },
     remove() {
         return false;
-    },
-    download() {
-        return false
     }
-})
+});
 
 Presentation.allow({
     insert(){
@@ -27,7 +24,7 @@ Presentation.allow({
     remove() {
         return true;
     },
-    download() {
-        return true
+    download(userId, fileObj) {
+        return true;
     }
 });
