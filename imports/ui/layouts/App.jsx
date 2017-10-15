@@ -2,15 +2,18 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
 import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
+import Menu from 'material-ui/svg-icons/navigation/menu';
+import LinearProgress from 'material-ui/LinearProgress';
+import {white, blue500} from 'material-ui/styles/colors';
+import withWidth, {LARGE, SMALL} from 'material-ui/utils/withWidth';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session'; // XXX: SESSION
 import { Lists } from '../../api/lists/lists.js';
-import UserMenu from '../components/UserMenu.jsx';
-import MainMenu from '../components/MainMenu.jsx';
 import ConnectionNotification from '../components/ConnectionNotification.jsx';
 import Loading from '../components/Loading.jsx';
 
@@ -23,16 +26,13 @@ injectTapEventPlugin();
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;
 
-const navStyle = {
-    marginTop: 64,
-    height: (window.innerHeight - 64)
-};
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menuOpen: false,
+      navDrawerDocker: props.width === LARGE,
+      navDrawerOpen: props.width === LARGE,
       showConnectionIssue: false,
     };
     this.toggleMenu = this.toggleMenu.bind(this);
@@ -46,17 +46,30 @@ export default class App extends React.Component {
     }, CONNECTION_ISSUE_TIMEOUT);
   }
 
-  componentWillReceiveProps({ loading, children }) {
-    // redirect / to a list once lists are ready
-    if (!loading && !children) {
-      const list = Lists.findOne();
-      this.context.router.replace(`/lists/${list._id}`);
+  componentWillReceiveProps(nextProps) {
+    if (this.props.width !== nextProps.width) {
+        this.setState({
+            navDrawerDocker: nextProps.width === LARGE,
+            navDrawerOpen: nextProps.width === LARGE
+        });
     }
   }
 
   toggleMenu(menuOpen = !Session.get('menuOpen')) {
     Session.set({ menuOpen });
   }
+
+  handleChangeRequestNavDrawer() {
+    this.setState({
+        navDrawerOpen: !this.state.navDrawerOpen
+    });
+  }
+
+    onRequestChange(open, reason){
+        this.setState({
+            navDrawerOpen: open
+        });
+    }
 
   logout() {
     Meteor.logout();
@@ -72,7 +85,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { showConnectionIssue } = this.state;
+    const { showConnectionIssue, navDrawerOpen } = this.state;
     const {
       user,
       connected,
@@ -82,6 +95,7 @@ export default class App extends React.Component {
       children,
       location,
     } = this.props;
+    const paddingLeftDrawerOpen = 270;
 
     // eslint-disable-next-line react/jsx-no-bind
     const closeMenu = this.toggleMenu.bind(this, false);
@@ -92,13 +106,55 @@ export default class App extends React.Component {
       key: location.pathname,
     });
 
+    const styles = {
+        header: {
+            paddingLeft: navDrawerOpen ? paddingLeftDrawerOpen : 0
+        },
+        container: {
+            margin: '80px 20px 20px 15px',
+            paddingLeft: navDrawerOpen && this.props.width !== SMALL ? paddingLeftDrawerOpen : 0
+        },
+        navStyle: {
+            marginTop: 57,
+        },
+        menuButton: {
+            marginLeft: 10
+        },
+        appBar: {
+            position: 'fixed',
+            top: 0,
+            overflow: 'hidden',
+            maxHeight: 57,
+            zIndex: 1400
+        },
+        loadingStyle: {
+            zIndex: 1500
+        }
+    };
+
     return (
     <MuiThemeProvider>
       <div>
+        {loading?<LinearProgress mode="indeterminate" color={blue500} style={styles.loadingStyle} />:null}
         <AppBar
-            title="Title"
-        />
-        <Drawer open={this.state.open} containerStyle={navStyle} zDepth={1} width={270}>
+            style={styles.appBar}
+            iconElementLeft={
+              <IconButton style={styles.menuButton} onClick={this.handleChangeRequestNavDrawer.bind(this)}>
+                <Menu color={white} />
+              </IconButton>
+            }
+        >
+            {showConnectionIssue && !connected
+                ? <ConnectionNotification />
+                : null}
+        </AppBar>
+        <Drawer
+            docked={this.state.navDrawerDocker}
+            open={this.state.navDrawerOpen}
+            containerStyle={styles.navStyle}
+            onRequestChange={this.onRequestChange.bind(this)}
+            width={paddingLeftDrawerOpen}
+        >
           <MenuItem leftIcon={<PersonAdd />}>
             <Link
               to={`/interns/`}
@@ -111,28 +167,14 @@ export default class App extends React.Component {
           </MenuItem>
           <MenuItem leftIcon={<ContentCopy />}>Отчеты</MenuItem>
         </Drawer>
-        <div className="wrapper">
-          <div id="container page-wrapper" className={menuOpen ? 'menu-open gray-bg' : 'gray-bg'}>
-            <section id="menu">
-              <UserMenu user={user} logout={this.logout} />
-              <MainMenu user={user} />
-            </section>
-              {showConnectionIssue && !connected
-                  ? <ConnectionNotification />
-                  : null}
-            <div className="content-overlay" onClick={closeMenu} />
-            <div id="content-container">
-              <ReactCSSTransitionGroup
-                  transitionName="fade"
-                  transitionEnterTimeout={200}
-                  transitionLeaveTimeout={200}
-              >
-                  {loading
-                      ? <Loading key="loading" />
-                      : clonedChildren}
-              </ReactCSSTransitionGroup>
-            </div>
-          </div>
+        <div style={styles.container}>
+          <ReactCSSTransitionGroup
+              transitionName="fade"
+              transitionEnterTimeout={200}
+              transitionLeaveTimeout={200}
+          >
+              {!loading?clonedChildren:null}
+          </ReactCSSTransitionGroup>
         </div>
       </div>
     </MuiThemeProvider>
@@ -154,3 +196,5 @@ App.propTypes = {
 App.contextTypes = {
   router: React.PropTypes.object,
 };
+
+export default withWidth()(App);

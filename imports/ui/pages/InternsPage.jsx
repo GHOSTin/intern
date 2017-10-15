@@ -13,10 +13,15 @@ import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import ContentCreate from 'material-ui/svg-icons/content/create';
 
-const style = {
-    position: "absolute",
-    right: 10,
-    bottom: 10
+const styles = {
+    floatingActionButton: {
+        margin: 0,
+        top: 'auto',
+        right: 20,
+        bottom: 20,
+        left: 'auto',
+        position: 'fixed',
+    }
 };
 
 export default class InternsPage extends BaseComponent {
@@ -113,9 +118,6 @@ export default class InternsPage extends BaseComponent {
 
     return (
       <div className="page lists-show">
-        <nav className="list-header">
-            <MobileMenu />
-        </nav>
         <div className="content-scrollable list-items">
           {loading
             ? <Message title={i18n.__('pages.InternsPage.loading')} />
@@ -124,7 +126,7 @@ export default class InternsPage extends BaseComponent {
           <FloatingActionButton
               backgroundColor={lightBlue300}
               onTouchTap={() => this.onEditingChange({}, false)}
-              style={style}
+              style={styles.floatingActionButton}
           >
             <ContentAdd/>
           </FloatingActionButton>

@@ -4,28 +4,12 @@
 @column: 5.55555%;
 
 body {
-  .position(absolute, 0, 0, 0, 0);
-  background-color: #315481;
-  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  margin: 0;
+  background-color: #fff;
 }
 
-#container {
-  .position(absolute, 0, 0, 0, 0);
-
-  @media screen and (min-width: 60em) {
-    left: @column;
-    right: @column;
-  }
-
-  @media screen and (min-width: 80em) {
-    left: 2*@column;
-    right: 2*@column;
-  }
-
-  // Hide anything offscreen
-  overflow: hidden;
+body, html, #app, #app > div{
+  height: 100%;
 }
 
 #menu {
