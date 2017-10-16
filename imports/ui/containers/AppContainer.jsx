@@ -3,20 +3,16 @@ import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Lists } from '../../api/lists/lists.js';
+import { Interns } from '/imports/api/interns/interns';
 import App from '../layouts/App.jsx';
 
 export default createContainer(() => {
-  const publicHandle = Meteor.subscribe('lists.public');
-  const privateHandle = Meteor.subscribe('lists.private');
+  const privateHandle = Meteor.subscribe('interns.list');
   return {
     user: Meteor.user(),
-    loading: !(publicHandle.ready() && privateHandle.ready()),
+    loading: !privateHandle.ready(),
     connected: Meteor.status().connected,
     menuOpen: Session.get('menuOpen'),
-    lists: Lists.find({ $or: [
-      { userId: { $exists: false } },
-      { userId: Meteor.userId() },
-    ] }).fetch(),
+    interns: Interns.find({}).fetch(),
   };
 }, App);
