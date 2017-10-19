@@ -1,10 +1,24 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { Link } from 'react-router';
+import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import {lightBlue300, white} from 'material-ui/styles/colors';
 import i18n from 'meteor/universe:i18n';
 import BaseComponent from '../components/BaseComponent.jsx';
 
 import AuthPage from './AuthPage.jsx';
+
+const styles = {
+  paper: {
+    padding: 20,
+    overflow: 'auto'
+  },
+  loginButton: {
+    float: 'right'
+  }
+};
 
 export default class SignInPage extends BaseComponent {
   constructor(props) {
@@ -15,8 +29,8 @@ export default class SignInPage extends BaseComponent {
 
   onSubmit(event) {
     event.preventDefault();
-    const email = this.email.value;
-    const password = this.password.value;
+    const email = this.email.input.value;
+    const password = this.password.input.value;
     const errors = {};
 
     if (!email) {
@@ -52,53 +66,43 @@ export default class SignInPage extends BaseComponent {
         <h1 className="title-auth">
           {i18n.__('pages.authPageSignIn.signIn')}
         </h1>
-        <p className="subtitle-auth">
-          {i18n.__('pages.authPageSignIn.signInReason')}
-        </p>
-        <form onSubmit={this.onSubmit}>
-          <div className="list-errors">
-            {errorMessages.map(msg => (
-              <div className="list-item" key={msg}>{msg}</div>
-            ))}
-          </div>
-          <div className={`input-symbol ${errorClass('email')}`}>
-            <input
-              type="email"
-              name="email"
+        <Paper style={styles.paper}>
+          <form onSubmit={this.onSubmit}>
+            <div className="list-errors">
+              {errorMessages.map(msg => (
+                <div className="list-item" key={msg}>{msg}</div>
+              ))}
+            </div>
+            <TextField
+              hintText={i18n.__('pages.authPageSignIn.yourEmail')}
               ref={(c) => { this.email = c; }}
-              placeholder={i18n.__('pages.authPageSignIn.yourEmail')}
+              type='email'
+              fullWidth={true}
+              floatingLabelText={i18n.__('pages.authPageSignIn.yourEmail')}
             />
-            <span
-              className="icon-email"
-              title={i18n.__('pages.authPageSignIn.yourEmail')}
-            />
-          </div>
-          <div className={`input-symbol ${errorClass('password')}`}>
-            <input
-              type="password"
-              name="password"
+            <TextField
+              hintText={i18n.__('pages.authPageSignIn.password')}
+              type='password'
               ref={(c) => { this.password = c; }}
-              placeholder={i18n.__('pages.authPageSignIn.password')}
+              fullWidth={true}
+              floatingLabelText={i18n.__('pages.authPageSignIn.password')}
             />
-            <span
-              className="icon-lock"
-              title={i18n.__('pages.authPageSignIn.password')}
-            />
-          </div>
-          <button type="submit" className="btn-primary">
-            {i18n.__('pages.authPageSignIn.signInButton')}
-          </button>
-        </form>
+            <div>
+              <RaisedButton
+                label={i18n.__('pages.authPageSignIn.signInButton')}
+                backgroundColor={lightBlue300}
+                labelColor={white}
+                style={styles.loginButton}
+                fullWidth={true}
+                type="submit"
+              />
+            </div>
+          </form>
+        </Paper>
       </div>
     );
 
-    const link = (
-      <Link to="/join" className="link-auth-alt">
-        {i18n.__('pages.authPageSignIn.needAccount')}
-      </Link>
-    );
-
-    return <AuthPage content={content} link={link} />;
+    return <AuthPage content={content} />;
   }
 }
 

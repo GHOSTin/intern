@@ -19,7 +19,7 @@ const style = {
 };
 
 
-export default class StagePresentation extends BaseComponent{
+export default class StagePresentation extends BaseComponent {
     state = {
         presentation: null,
         file: null
@@ -29,9 +29,9 @@ export default class StagePresentation extends BaseComponent{
         super(props);
     }
 
-    componentWillMount(){
+    componentWillMount() {
         let exists = Presentation.findOne({_id: this.props.presentation});
-        if(exists){
+        if (exists) {
             this.setState({
                 presentation: exists.original.name,
                 file: exists
@@ -39,15 +39,15 @@ export default class StagePresentation extends BaseComponent{
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState({
             presentation: null,
             file: null
         });
     }
 
-    onFileLoad(e, file){
-        Presentation.insert(file, (error, fileObj)=>{
+    onFileLoad(e, file) {
+        Presentation.insert(file, (error, fileObj) => {
             this.props.changeHandler(fileObj._id);
             this.setState({
                 presentation: fileObj.original.name,
@@ -56,7 +56,7 @@ export default class StagePresentation extends BaseComponent{
         })
     }
 
-    handleRequestDownload(){
+    handleRequestDownload() {
         setTimeout(() => {
             const response = {
                 file: this.state.file.url(),
@@ -69,8 +69,8 @@ export default class StagePresentation extends BaseComponent{
         }, 100);
     }
 
-    handleRequestDelete(){
-        Presentation.remove(this.props.presentation, (error, fileObj)=>{
+    handleRequestDelete() {
+        Presentation.remove(this.props.presentation, (error, fileObj) => {
             this.props.changeHandler("");
             this.setState({
                 presentation: null,
@@ -79,8 +79,8 @@ export default class StagePresentation extends BaseComponent{
         })
     }
 
-    render(){
-        return this.props.presentation?(
+    render() {
+        return this.props.presentation ? (
             <Chip
                 style={style.chip}
                 onRequestDelete={this.handleRequestDelete.bind(this)}
@@ -89,7 +89,7 @@ export default class StagePresentation extends BaseComponent{
                 <Avatar icon={<FontIcon className="material-icons">insert_drive_file</FontIcon>}/>
                 {this.state.presentation}
             </Chip>
-        ):(
+        ) : (
             <Upload
                 label="Прикрепить презентацию"
                 onFileLoad={this.onFileLoad.bind(this)}

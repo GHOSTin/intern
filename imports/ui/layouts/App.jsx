@@ -6,14 +6,15 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
+import Group from 'material-ui/svg-icons/social/group';
 import Menu from 'material-ui/svg-icons/navigation/menu';
+import Divider from 'material-ui/Divider';
 import LinearProgress from 'material-ui/LinearProgress';
 import {white, blue500} from 'material-ui/styles/colors';
 import withWidth, {LARGE, SMALL} from 'material-ui/utils/withWidth';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Meteor} from 'meteor/meteor';
-import {Session} from 'meteor/session'; // XXX: SESSION
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ConnectionNotification from '../components/ConnectionNotification.jsx';
 
@@ -113,7 +114,7 @@ class App extends React.Component {
                 paddingLeft: navDrawerOpen ? paddingLeftDrawerOpen : 0
             },
             container: {
-                margin: '80px 20px 20px 15px',
+                margin: isAuthenticated ? '80px 20px 20px 15px': 'inherit',
                 paddingLeft: navDrawerOpen && isAuthenticated  && this.props.width !== SMALL ? paddingLeftDrawerOpen : 0
             },
             navStyle: {
@@ -153,6 +154,7 @@ class App extends React.Component {
                     {loading ?
                         <LinearProgress mode="indeterminate" color={blue500} style={styles.loadingStyle}/> : null}
                     <AppBar
+                        title={"ЧТПЗ Стажеры"}
                         style={styles.appBar}
                         iconElementLeft={
                             <IconButton
@@ -178,17 +180,24 @@ class App extends React.Component {
                         onRequestChange={this.onRequestChange.bind(this)}
                         width={paddingLeftDrawerOpen}
                     >
-                        <MenuItem leftIcon={<PersonAdd/>}>
-                            <Link
-                                to={`/interns/`}
-                                title="Список стажеров"
-                                className="list-todo"
-                                activeClassName="active"
-                            >
-                                Список стажеров
-                            </Link>
-                        </MenuItem>
+                        <Link
+                            to={`/interns/`}
+                            title="Список стажеров"
+                            className="list-todo"
+                            activeClassName="active"
+                        >
+                            <MenuItem leftIcon={<PersonAdd/>}>Список стажеров</MenuItem>
+                        </Link>
                         <MenuItem leftIcon={<ContentCopy/>}>Отчеты</MenuItem>
+                        <Divider/>
+                        <Link
+                          to={`/users/`}
+                          title="Список пользователей"
+                          className="users"
+                          activeClassName="active"
+                        >
+                            <MenuItem leftIcon={<Group/>}>Список пользователей</MenuItem>
+                        </Link>
                     </Drawer> : null}
                     <div style={styles.container}>
                         <ReactCSSTransitionGroup
@@ -209,8 +218,7 @@ App.propTypes = {
     user: React.PropTypes.object,      // current meteor user
     connected: React.PropTypes.bool,   // server connection status
     loading: React.PropTypes.bool,     // subscription status
-    menuOpen: React.PropTypes.bool,    // is side menu open?
-    lists: React.PropTypes.array,      // all lists visible to the current user
+    interns: React.PropTypes.array,    // all interns
     children: React.PropTypes.element, // matched child route component
     location: React.PropTypes.object,  // current router location
     params: React.PropTypes.object,    // parameters of the current route

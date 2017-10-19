@@ -273,7 +273,7 @@ class Cropper extends BaseComponent {
                 <Row>
                     <canvas
                         ref="canvas"
-                        style={{"border-radius": "50%"}}
+                        style={{"borderRadius": "50%"}}
                         width={this.props.width}
                         height={this.props.height}>
                     </canvas>
@@ -325,7 +325,7 @@ export class AvatarCropper extends BaseComponent {
         ];
         return (
             <Dialog
-                title="Crop It"
+                title="Обрезать"
                 onHide={this.props.onRequestHide}
                 open={this.props.cropperOpen}
                 autoScrollBodyContent={true}
@@ -357,4 +357,4 @@ AvatarCropper.propTypes = {
     onRequestHide: React.PropTypes.func.isRequired
 };
 AvatarCropper.defaultProps = { width: 400, height: 400, modalSize: "large",
-    closeButtonCopy: "Close", cropButtonCopy: "Crop and Save"};
+    closeButtonCopy: "Закрыть", cropButtonCopy: "Обрезать и сохранить"};

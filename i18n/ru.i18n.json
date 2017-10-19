@@ -49,13 +49,13 @@
       "haveAccountSignIn": "Have an account? Sign in"
     },
     "authPageSignIn": {
-      "emailRequired": "Email required",
-      "passwordRequired": "Password required",
-      "signIn": "Sign In.",
+      "emailRequired": "Укажите Email",
+      "passwordRequired": "Укажите пароль",
+      "signIn": "Авторизация",
       "signInReason": "Signing in allows you to view private lists",
-      "yourEmail": "Your Email",
-      "password": "Password",
-      "signInButton": "Sign in",
+      "yourEmail": "Ваш Email",
+      "password": "Пароль",
+      "signInButton": "Войти",
       "needAccount": "Need an account? Join Now."
     },
     "listPage": {

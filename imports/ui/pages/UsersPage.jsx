@@ -3,7 +3,7 @@ import i18n from 'meteor/universe:i18n';
 import BaseComponent from '../components/BaseComponent.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import Message from '../components/Message.jsx';
-import InternDialog from '../components/InternDialog.jsx';
+import UserDialog from '../components/UserDialog';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {lightBlue300} from 'material-ui/styles/colors';
@@ -23,7 +23,7 @@ const styles = {
     }
 };
 
-export default class InternsPage extends BaseComponent {
+export default class UsersPage extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = Object.assign(this.state, { editing: undefined, open: false });
@@ -31,9 +31,10 @@ export default class InternsPage extends BaseComponent {
     this.onHideModal = this.onHideModal.bind(this);
   }
 
-  onEditingChange(intern, editing) {
+  onEditingChange(user, editing) {
+    console.log(user);
     this.setState({
-        intern: editing ? intern : undefined,
+        user: editing ? user : undefined,
         open: true,
         editing: editing
     });
@@ -46,7 +47,7 @@ export default class InternsPage extends BaseComponent {
   }
 
   render() {
-    const { loading, listExists, interns } = this.props;
+    const { loading, listExists, users } = this.props;
 
     const TABLE_COLUMNS = [
         {
@@ -71,38 +72,38 @@ export default class InternsPage extends BaseComponent {
       return <NotFoundPage />;
     }
 
-    let Interns;
-    if (!interns || !interns.length) {
-        Interns = (
+    let Users;
+    if (!users || !users.length) {
+      Users = (
         <Message
           title={i18n.__('pages.InternsPage.noInterns')}
           subtitle={i18n.__('pages.InternsPage.addAbove')}
         />
       );
     } else {
-        Interns = (
+      Users = (
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHeaderColumn style={{width: 68}}/>
                         <TableHeaderColumn>ФИО</TableHeaderColumn>
-                        <TableHeaderColumn>№ этапа</TableHeaderColumn>
+                        <TableHeaderColumn>E-mail/Login</TableHeaderColumn>
                         <TableHeaderColumn style={{width: 100}}/>
                     </TableRow>
                 </TableHeader>
                 <TableBody showRowHover={true} displayRowCheckbox={true}>
-                    {interns.map((intern,index) => (
-                        <TableRow key={intern._id}>
-                            <TableRowColumn style={{width: 68}}><Avatar src={intern.avatar}/></TableRowColumn>
+                    {users.map((user,index) => (
+                        <TableRow key={user._id}>
+                            <TableRowColumn style={{width: 68}}><Avatar src={user.avatar}/></TableRowColumn>
                             <TableRowColumn>
-                                {intern.lastname} {intern.firstname} {intern.middlename}
+                                {user.username}
                             </TableRowColumn>
-                            <TableRowColumn>{intern.stages.length}</TableRowColumn>
+                            <TableRowColumn>{user.emails[0].address}</TableRowColumn>
                             <TableRowColumn style={{overflow: 'visible', width: 100}}>
                                 <IconButton
                                     tooltip="Изменить"
                                     tooltipPosition='top-center'
-                                    onClick={() => this.onEditingChange(intern, true)}
+                                    onClick={() => this.onEditingChange(user, true)}
                                 >
                                     <ContentCreate/>
                                 </IconButton>
@@ -120,7 +121,7 @@ export default class InternsPage extends BaseComponent {
         <div className="content-scrollable list-items">
           {loading
             ? <Message title={i18n.__('pages.InternsPage.loading')} />
-            : Interns}
+            : Users}
         </div>
           <FloatingActionButton
               backgroundColor={lightBlue300}
@@ -129,10 +130,10 @@ export default class InternsPage extends BaseComponent {
           >
             <ContentAdd/>
           </FloatingActionButton>
-          <InternDialog
+          <UserDialog
               open={this.state.open}
               onHide={this.onHideModal}
-              intern={this.state.intern}
+              user={this.state.user}
               editing={this.state.editing}
           />
       </div>
@@ -140,9 +141,8 @@ export default class InternsPage extends BaseComponent {
   }
 }
 
-InternsPage.propTypes = {
+UsersPage.propTypes = {
   loading: React.PropTypes.bool,
   listExists: React.PropTypes.bool,
-  interns: React.PropTypes.array,
-  presentations: React.PropTypes.object
+  users: React.PropTypes.array,
 };
