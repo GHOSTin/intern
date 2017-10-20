@@ -198,6 +198,9 @@ class Cropper extends BaseComponent {
             mousedown: e => this.mouseDownListener(e)
         };
 
+        window.addEventListener("touchstart", this.listeners.mouseup, false);
+        window.addEventListener("touchmove", this.listeners.mousemove, false);
+        canvas.addEventListener("touchend", this.listeners.mousedown, false);
         window.addEventListener("mousemove", this.listeners.mousemove, false);
         window.addEventListener("mouseup", this.listeners.mouseup, false);
         canvas.addEventListener("mousedown", this.listeners.mousedown, false);

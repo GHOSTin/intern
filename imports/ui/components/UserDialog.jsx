@@ -1,25 +1,17 @@
 import React from "react";
 import BaseComponent from '../components/BaseComponent.jsx';
-import DepartmentAutoCompleteContainer from '/imports/ui/components/DepartmentAutoComplete';
-import DatePicker from 'material-ui/DatePicker';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import Checkbox from 'material-ui/Checkbox';
 import Divider from 'material-ui/Divider';
-import AutoComplete from 'material-ui/AutoComplete';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import {grey400, grey50} from 'material-ui/styles/colors';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { grey50 } from 'material-ui/styles/colors';
 import FontIcon from 'material-ui/FontIcon';
-import Paper from 'material-ui/Paper';
 import Avatar from 'material-ui/Avatar';
-import Upload from 'material-ui-upload/Upload';
 import {AvatarCropper, FileUpload} from './ImageUploader.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
-import {insert, update} from '/imports/api/interns/methods'
+import { update } from '/imports/api/users/methods'
 import { displayError } from '../helpers/errors.js';
 
 let DateTimeFormat;
@@ -64,7 +56,9 @@ export default class UserDialog extends BaseComponent {
         },
         cropperOpen: false,
         img: null,
-        verified: true
+        verified: true,
+        password: null,
+        passwordConfirm: null
     };
 
     constructor(props) {
@@ -99,25 +93,54 @@ export default class UserDialog extends BaseComponent {
 
     changeHandler = function(key, attr, event) {
       if(event.currentTarget.name === 'password' || event.currentTarget.name === 'passwordConfirm') {
-        console.log(event.currentTarget);
+        if(this.password.getValue() !== this.passwordConfirm.getValue()){
+          this.setState({verified: false});
+        } else {
+          this.setState({verified: true});
+        }
       }
-        this.changeHandlerVal(key, attr, event.currentTarget.value);
+      this.changeHandlerVal(key, attr, event.currentTarget.value);
     };
 
-    changeHandlerTabVal = (key, attr, index, value) => {
-        const items = this.state.intern[key].slice();
-        items[index][attr] = value;
-
-        this.changeHandlerVal('intern', key, items);
-    };
+    changeEmail(e, value){
+      e.preventDefault();
+      let emails = [{address: value}];
+      let user = this.state.user;
+      user.emails = emails;
+      this.setState({
+        user: user
+      });
+    }
 
     handleSave(e){
         e.preventDefault();
+        const username = this.username.getValue();
+        const email = this.email.getValue();
+        const password = this.password.getValue();
+        const confirm = this.passwordConfirm.getValue();
         console.log(this.state.user);
+        if(!this.state.verified){
+          return false;
+        }
         if(this.state.editing){
-            update.call({intern: this.state.intern}, displayError)
+          const doc = {
+            username: username,
+            email: email,
+            password: password === confirm ? password : ""
+          };
+          update.call({id: this.state.user._id, doc: doc}, displayError)
         } else {
-            insert.call({intern: this.state.intern}, displayError)
+          Accounts.createUser({
+            username,
+            email,
+            password,
+          }, (err) => {
+            if (err) {
+              this.setState({
+                errors: { none: err.reason },
+              });
+            }
+          });
         }
         this.props.onHide()
     };
@@ -125,13 +148,13 @@ export default class UserDialog extends BaseComponent {
     handleFileChange(dataURI) {
         this.changeHandlerVal(null, "img", dataURI);
         this.changeHandlerVal(null, "cropperOpen", true);
-        this.changeHandlerVal("intern", "avatar", this.state.intern.avatar);
+        this.changeHandlerVal("user", "avatar", this.state.user.avatar);
     };
 
     handleCrop(dataURI) {
         this.changeHandlerVal(null, "img", null);
         this.changeHandlerVal(null, "cropperOpen", false);
-        this.changeHandlerVal("intern", "avatar", dataURI);
+        this.changeHandlerVal("user", "avatar", dataURI);
     };
     handleRequestHide() {
         this.setState({
@@ -210,6 +233,7 @@ export default class UserDialog extends BaseComponent {
                                 fullWidth={true}
                                 floatingLabelText="ФИО"
                                 value={user.username}
+                                ref = {(e)=>{this.username = e}}
                                 onChange={this.changeHandler.bind(this, 'user', 'username')}
                             />
                             <TextField
@@ -217,26 +241,25 @@ export default class UserDialog extends BaseComponent {
                                 fullWidth={true}
                                 floatingLabelText="E-mail"
                                 type='email'
-                                value={user.emails[0]?user.emails[0].address:""}
-                                onChange={this.changeHandler.bind(this, 'user', 'email')}
+                                defaultValue={user.emails[0]?user.emails[0].address:""}
+                                ref = {(e)=>{this.email = e}}
+                                onChange={this.changeEmail.bind(this)}
                             />
                             <TextField
                                 name="password"
                                 fullWidth={true}
                                 floatingLabelText="Пароль"
                                 type='password'
-                                ref = {(e)=>{this.password = e.value}}
-                                value={user.password}
-                                onChange={this.changeHandler.bind(this, 'user', 'password')}
+                                ref = {(e)=>{this.password = e}}
+                                onChange={this.changeHandler.bind(this, null, 'password')}
                             />
                             <TextField
                               name="passwordConfirm"
                               fullWidth={true}
                               floatingLabelText="Повтор пароля"
                               type='password'
-                              ref = {(e)=>{this.passwordConfirm = e.value}}
-                              value={user.passwordConfirm}
-                              onChange={this.changeHandler.bind(this, 'user', 'passwordConfirm')}
+                              ref = {(e)=>{this.passwordConfirm = e}}
+                              onChange={this.changeHandler.bind(this, null, 'passwordConfirm')}
                             />
                         </Col>
                         <Divider />
@@ -266,5 +289,7 @@ UserDialog.defaultProps = {
     emails: [],
     createdAt: null,
     avatar: "/default-userAvatar.png",
-  }
+  },
+  password: null,
+  passwordConfirm: null
 };
