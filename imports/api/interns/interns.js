@@ -236,21 +236,3 @@ Interns.publicFields = {
 };
 
 Factory.define('intern', Interns, {});
-
-Interns.helpers({
-    // A list is considered to be private if it has a userId set
-    isPrivate() {
-        return !!this.userId;
-    },
-    isLastPublicList() {
-        const publicListCount = Interns.find({ userId: { $exists: false } }).count();
-        return !this.isPrivate() && publicListCount === 1;
-    },
-    editableBy(userId) {
-        if (!this.userId) {
-            return true;
-        }
-
-        return this.userId === userId;
-    },
-});

@@ -8,9 +8,8 @@ import { Promise } from 'meteor/promise';
 import { _ } from 'meteor/underscore';
 
 const createList = (userId) => {
-  const list = Factory.create('list', { userId });
-  _.times(3, () => Factory.create('todo', { listId: list._id }));
-  return list;
+  const intern = Factory.create('intern', { userId });
+  return intern;
 };
 
 Meteor.methods({

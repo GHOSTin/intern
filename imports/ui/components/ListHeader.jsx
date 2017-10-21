@@ -3,7 +3,6 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
 import BaseComponent from './BaseComponent.jsx';
-import MobileMenu from './MobileMenu.jsx';
 import { displayError } from '../helpers/errors.js';
 
 import {
@@ -117,7 +116,6 @@ export default class ListHeader extends BaseComponent {
     const { list } = this.props;
     return (
       <div>
-        <MobileMenu />
         <h1 className="title-page" onClick={this.editList}>
           <span className="title-wrapper">{list.name}</span>
           <span className="count-list">{list.incompleteCount}</span>

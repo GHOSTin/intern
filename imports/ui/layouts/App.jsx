@@ -4,11 +4,7 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
-import Group from 'material-ui/svg-icons/social/group';
 import Menu from 'material-ui/svg-icons/navigation/menu';
-import Divider from 'material-ui/Divider';
 import Avatar from 'material-ui/Avatar';
 import LinearProgress from 'material-ui/LinearProgress';
 import {white, blue500} from 'material-ui/styles/colors';
@@ -18,8 +14,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Meteor} from 'meteor/meteor';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ConnectionNotification from '../components/ConnectionNotification.jsx';
-
-import {Link} from 'react-router';
+import MainMenu from '../components/MainMenu';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
@@ -211,24 +206,7 @@ class App extends React.Component {
                                 <span style={styles.avatar.span}>{user.username}</span>
                             </div> : null
                         }
-                        <Link
-                            to={`/interns/`}
-                            title="Список стажеров"
-                            className="list-todo"
-                            activeClassName="active"
-                        >
-                            <MenuItem leftIcon={<PersonAdd/>}>Список стажеров</MenuItem>
-                        </Link>
-                        <MenuItem leftIcon={<ContentCopy/>}>Отчеты</MenuItem>
-                        <Divider/>
-                        <Link
-                          to={`/users/`}
-                          title="Список пользователей"
-                          className="users"
-                          activeClassName="active"
-                        >
-                            <MenuItem leftIcon={<Group/>}>Список пользователей</MenuItem>
-                        </Link>
+                        <MainMenu/>
                     </Drawer> : null}
                     <div style={styles.container}>
                         <ReactCSSTransitionGroup

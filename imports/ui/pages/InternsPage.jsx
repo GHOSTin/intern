@@ -134,7 +134,8 @@ export default class InternsPage extends BaseComponent {
       // Filter to select only the items that pass our seach, but only in the selected columns
       if (this.state.filterValue) {
           filteredItems = filteredItems.filter((item) => {
-                  return get(item, 'lastname', '').toString().toLowerCase().includes(this.state.filterValue);
+                  return [get(item, 'lastname', ''), get(item, 'firstname', ''),get(item, 'middlename', '')]
+                      .join(" ").toString().toLowerCase().includes(this.state.filterValue);
           });
       }
 
