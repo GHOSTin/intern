@@ -118,6 +118,7 @@ export default class UserDialog extends BaseComponent {
         const email = this.email.getValue();
         const password = this.password.getValue();
         const confirm = this.passwordConfirm.getValue();
+        const avatar = this.state.user.avatar;
         console.log(this.state.user);
         if(!this.state.verified){
           return false;
@@ -126,7 +127,8 @@ export default class UserDialog extends BaseComponent {
           const doc = {
             username: username,
             email: email,
-            password: password === confirm ? password : ""
+            password: password === confirm ? password : "",
+            avatar: avatar
           };
           update.call({id: this.state.user._id, doc: doc}, displayError)
         } else {
@@ -134,6 +136,7 @@ export default class UserDialog extends BaseComponent {
             username,
             email,
             password,
+            avatar
           }, (err) => {
             if (err) {
               this.setState({

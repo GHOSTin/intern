@@ -14,7 +14,6 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
 import Avatar from 'material-ui/Avatar';
-import Upload from 'material-ui-upload/Upload';
 import {AvatarCropper, FileUpload} from './ImageUploader.jsx';
 import EducationItem from './EducationItem.jsx';
 import ActivityItem from './ActivityItem.jsx';

@@ -1,15 +1,16 @@
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import { Interns } from '/imports/api/interns/interns';
 import App from '../layouts/App.jsx';
 
-export default createContainer(() => {
+export default withTracker(props => {
   const privateHandle = Meteor.subscribe('interns.list');
+  const userHandle = Meteor.subscribe('userData');
   return {
+    loading: !privateHandle.ready() || !userHandle.ready(),
     user: Meteor.user(),
-    loading: !privateHandle.ready(),
     connected: Meteor.status().connected,
     interns: Interns.find({}).fetch(),
   };
-}, App);
+})(App);

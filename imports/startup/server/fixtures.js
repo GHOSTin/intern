@@ -6,7 +6,7 @@ Meteor.startup(() => {
     Accounts.createUser({
       username: 'admin',
       email: '1@1.ru',
-      password: 'Aa123456'
+      password: 'Aa123456',
     });
   }
 });

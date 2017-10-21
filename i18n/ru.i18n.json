@@ -33,6 +33,10 @@
     },
     "todoItem": {
       "taskName": "Task name"
+    },
+    "Table": {
+      "Search": "Поиск",
+      "rowSize": "Число строк на странице:"
     }
   },
   "pages": {

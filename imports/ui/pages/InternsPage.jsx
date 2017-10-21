@@ -11,6 +11,8 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import ContentCreate from 'material-ui/svg-icons/content/create';
+import DataTables from 'material-ui-datatables';
+import get from 'lodash/get';
 
 const styles = {
     floatingActionButton: {
@@ -20,6 +22,14 @@ const styles = {
         bottom: 20,
         left: 'auto',
         position: 'fixed',
+    },
+    table:{
+        avatar: {
+            width: 60
+        },
+        edit: {
+            width: 100
+        }
     }
 };
 
@@ -45,6 +55,39 @@ export default class InternsPage extends BaseComponent {
       });
   }
 
+    handleRequestSort = (property, order) => {
+        const orderBy = property;
+
+        let data;
+            switch(orderBy) {
+                case 'stages':
+                    data =
+                        order ===
+                        'desc'
+                            ? this.props.interns.sort((a, b) => (b[orderBy].length < a[orderBy].length ? -1 : 1))
+                            : this.props.interns.sort((a, b) => (a[orderBy].length < b[orderBy].length ? -1 : 1));
+                    break;
+                default:
+                    data =
+                        order ===
+                            'desc'
+                                ? this.props.interns.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+                                : this.props.interns.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+            }
+
+        this.setState({ data, order, orderBy });
+    };
+
+    handleFilterValueChange(...args) {
+        // eslint-disable-next-line no-console
+        let filterValue = get(args, '[0]', null);
+        if (filterValue) {
+            filterValue = filterValue.toLowerCase();
+        }
+        const newState = Object.assign({}, this.state, { filterValue });
+        this.setState(newState);
+    }
+
   render() {
     const { loading, listExists, interns } = this.props;
 
@@ -53,23 +96,47 @@ export default class InternsPage extends BaseComponent {
             key: 'avatar',
             label: '',
             sortable: false,
+            style: styles.table.avatar,
+            render: (name, all) => <Avatar src={name}/>
         },
         {
             key: 'lastname',
-            label: 'Фамилия',
+            label: 'ФИО',
             sortable: true,
+            render: (name, all) => <p>{name} {all.firstname} {all.middlename}</p>
         },
         {
             key: 'stages',
             label: '№ этапа стажировки',
             sortable: true,
             render: (stages, all) => <p>{stages.length}</p>
+        },
+        {
+            key: 'edit',
+            alignRight: true,
+            style: styles.table.edit,
+            render: (item, intern) => <IconButton
+                tooltip="Изменить"
+                tooltipPosition='top-center'
+                onClick={() => this.onEditingChange(intern, true)}
+            >
+                <ContentCreate/>
+            </IconButton>
         }
     ];
 
       if (!listExists) {
       return <NotFoundPage />;
     }
+
+      let filteredItems = interns;
+
+      // Filter to select only the items that pass our seach, but only in the selected columns
+      if (this.state.filterValue) {
+          filteredItems = filteredItems.filter((item) => {
+                  return get(item, 'lastname', '').toString().toLowerCase().includes(this.state.filterValue);
+          });
+      }
 
     let Interns;
     if (!interns || !interns.length) {
@@ -81,37 +148,26 @@ export default class InternsPage extends BaseComponent {
       );
     } else {
         Interns = (
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHeaderColumn style={{width: 68}}/>
-                        <TableHeaderColumn>ФИО</TableHeaderColumn>
-                        <TableHeaderColumn>№ этапа</TableHeaderColumn>
-                        <TableHeaderColumn style={{width: 100}}/>
-                    </TableRow>
-                </TableHeader>
-                <TableBody showRowHover={true} displayRowCheckbox={true}>
-                    {interns.map((intern,index) => (
-                        <TableRow key={intern._id}>
-                            <TableRowColumn style={{width: 68}}><Avatar src={intern.avatar}/></TableRowColumn>
-                            <TableRowColumn>
-                                {intern.lastname} {intern.firstname} {intern.middlename}
-                            </TableRowColumn>
-                            <TableRowColumn>{intern.stages.length}</TableRowColumn>
-                            <TableRowColumn style={{overflow: 'visible', width: 100}}>
-                                <IconButton
-                                    tooltip="Изменить"
-                                    tooltipPosition='top-center'
-                                    onClick={() => this.onEditingChange(intern, true)}
-                                >
-                                    <ContentCreate/>
-                                </IconButton>
-                            </TableRowColumn>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-
+            <DataTables
+                title={"Список стажеров"}
+                height={'auto'}
+                selectable={false}
+                showRowHover={true}
+                showHeaderToolbar={true}
+                columns={TABLE_COLUMNS}
+                data={filteredItems}
+                showCheckboxes={false}
+                onFilterValueChange={this.handleFilterValueChange.bind(this)}
+                onSortOrderChange={this.handleRequestSort.bind(this)}
+                initialSort={{column: 'lastname', order: 'asc'}}
+                page={1}
+                count={100}
+                rowSizeLabel={i18n.__('components.Table.rowSize')}
+                summaryLabelTemplate={(start, end, count) => {
+                    return `${start} - ${end} из ${count}`;
+                }}
+                filterHintText={i18n.__('components.Table.Search')}
+            />
         );
     }
 

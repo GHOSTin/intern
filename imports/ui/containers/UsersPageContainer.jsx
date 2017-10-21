@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import UsersPage from '../pages/UsersPage.jsx';
 
-const UsersPageContainer = createContainer(() => {
+const UsersPageContainer = withTracker(props => {
   const usersHandle = Meteor.subscribe('users.public');
   const loading = !usersHandle.ready();
   const users = Meteor.users.find({});
@@ -12,6 +12,6 @@ const UsersPageContainer = createContainer(() => {
     listExists,
     users: listExists ? users.fetch() : [],
   };
-}, UsersPage);
+})(UsersPage);
 
 export default UsersPageContainer;

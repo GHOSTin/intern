@@ -1,13 +1,13 @@
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Interns } from '../../api/interns/interns.js';
 import InternsPage from '../pages/InternsPage';
 
-const InternsPageContainer = createContainer(() => {
+const InternsPageContainer = withTracker( props => {
     const internsHandler = Meteor.subscribe('interns.list');
     const presentations = Meteor.subscribe('interns.presentations');
     const loading = !internsHandler.ready();
-    const interns = Interns.find({});
+    const interns = Interns.find({},{sort : { lastname : 1}});
     const listExists = !loading && !!interns;
     return {
         loading,
@@ -15,6 +15,6 @@ const InternsPageContainer = createContainer(() => {
         interns: listExists ? interns.fetch() : [],
         presentations
     };
-}, InternsPage);
+})(InternsPage);
 
 export default InternsPageContainer;

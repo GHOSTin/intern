@@ -11,12 +11,14 @@ export const update =  new ValidatedMethod({
     "doc.username": { type: String },
     "doc.email": { type: String },
     "doc.password": { type: String },
+    "doc.avatar": { type: String },
   }).validator(),
   run({ id, doc }) {
     Meteor.users.update(id, {
       $set: {
         username: doc.username,
-        "emails.0.address": doc.email
+        "emails.0.address": doc.email,
+        avatar: doc.avatar
       }
     });
     if(doc.password !== ""){

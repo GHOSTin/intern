@@ -9,6 +9,7 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import Group from 'material-ui/svg-icons/social/group';
 import Menu from 'material-ui/svg-icons/navigation/menu';
 import Divider from 'material-ui/Divider';
+import Avatar from 'material-ui/Avatar';
 import LinearProgress from 'material-ui/LinearProgress';
 import {white, blue500} from 'material-ui/styles/colors';
 import withWidth, {LARGE, SMALL} from 'material-ui/utils/withWidth';
@@ -132,6 +133,28 @@ class App extends React.Component {
             },
             loadingStyle: {
                 zIndex: 1500
+            },
+            avatar: {
+                div: {
+                    padding: '15px 16px 20px 15px',
+                    backgroundImage:  'url(/material_bg.jpg)',
+                    boxSizing: "content-box",
+                    backgroundColor: "#edefef"
+                },
+                icon: {
+                    display: 'block',
+                    marginRight: 15,
+                    boxShadow: '0px 0px 0px 4px rgba(0,0,0,0.2)'
+                },
+                span: {
+                    paddingTop: 12,
+                    display: 'block',
+                    color: 'white',
+                    textShadow: '1px 1px #151515',
+                    textTransform: 'capitalize',
+                    fontSize: 14,
+                    fontWeight: 500
+                }
             }
         };
 
@@ -180,6 +203,14 @@ class App extends React.Component {
                         onRequestChange={this.onRequestChange.bind(this)}
                         width={paddingLeftDrawerOpen}
                     >
+                        {!loading ?
+                            <div style={styles.avatar.div}>
+                                <Avatar src={user.avatar}
+                                        size={50}
+                                        style={styles.avatar.icon}/>
+                                <span style={styles.avatar.span}>{user.username}</span>
+                            </div> : null
+                        }
                         <Link
                             to={`/interns/`}
                             title="Список стажеров"
