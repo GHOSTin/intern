@@ -2,26 +2,26 @@
 /* eslint-disable quote-props */
 
 App.info({
-  name: 'Todos',
-  description: 'A simple todo list app built in Meteor.',
-  author: 'Percolate Studio Team',
-  email: 'us@percolatestudio.com',
-  website: 'http://percolatestudio.com',
-  version: '0.0.1',
+  name: 'Stage\'op',
+  description: 'Interns CHTPZ.',
+  author: 'Nemytov Vyacheslav',
+  email: 'vyacheslav.nemytov@chelpipe.ru',
+  website: 'http://ghost-in.ru',
+  version: '1.0.0',
 });
 
 App.icons({
   // iOS
-  'iphone': 'resources/icons/icon-60x60.png',
-  'iphone_2x': 'resources/icons/icon-60x60@2x.png',
-  'ipad': 'resources/icons/icon-76x76.png',
-  'ipad_2x': 'resources/icons/icon-76x76@2x.png',
+  'iphone': 'public/icons/icon-60x60.png',
+  'iphone_2x': 'public/icons/icon-60x60@2x.png',
+  'ipad': 'public/icons/icon-76x76.png',
+  'ipad_2x': 'public/icons/icon-76x76@2x.png',
 
   // Android
-  'android_ldpi': 'resources/icons/icon-36x36.png',
-  'android_mdpi': 'resources/icons/icon-48x48.png',
-  'android_hdpi': 'resources/icons/icon-72x72.png',
-  'android_xhdpi': 'resources/icons/icon-96x96.png',
+  'android_ldpi': 'public/icons/icon-36x36.png',
+  'android_mdpi': 'public/icons/icon-48x48.png',
+  'android_hdpi': 'public/icons/icon-72x72.png',
+  'android_xhdpi': 'public/icons/icon-96x96.png',
 });
 
 App.launchScreens({
