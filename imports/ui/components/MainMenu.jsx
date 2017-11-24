@@ -18,12 +18,19 @@ export default class MainMenu extends BaseComponent {
                 <Link
                     to={`/interns/`}
                     title="Список стажеров"
-                    className="list-todo"
+                    className="interns"
                     activeClassName="active"
                 >
                     <MenuItem leftIcon={<PersonAdd/>}>Список стажеров</MenuItem>
                 </Link>
-                <MenuItem leftIcon={<ContentCopy/>}>Отчеты</MenuItem>
+                <Link
+                  to={`/reports/`}
+                  title="Отчеты"
+                  className="reports"
+                  activeClassName="active"
+                >
+                  <MenuItem leftIcon={<ContentCopy/>}>Отчеты</MenuItem>
+                </Link>
                 <Divider/>
                 <Link
                     to={`/users/`}
