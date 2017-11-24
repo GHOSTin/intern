@@ -1,8 +1,9 @@
-import { _ } from 'meteor/underscore';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import {Interns} from './interns'
+import {Interns} from './interns';
+import {Tutors} from '../tutors/tutors';
+import { _ } from 'lodash'
 
 const InternSchema = new SimpleSchema([new SimpleSchema({
     _id: {
@@ -21,7 +22,15 @@ export const update = new ValidatedMethod({
     }).validator(),
     run({ intern }) {
         intern = _.omit(intern, "createdAt");
+        let tutor = _.capitalize(intern.tutor.trim());
+        if(Meteor.isServer) {
+          let {name} = Tutors.findOne({internId: intern._id}, {sort: {date: -1}})||{name: null};
+          if (tutor && tutor !== name) {
+            Tutors.insert({internId: intern._id, name: tutor})
+          }
+        }
         Interns.update({_id: intern._id}, {$set: intern});
+
     },
 });
 
@@ -34,7 +43,11 @@ export const insert = new ValidatedMethod({
         }
     }).validator(),
     run({ intern }) {
-        Interns.insert(intern);
+        let internId = Interns.insert(intern);
+        let tutor = _.capitalize(intern.tutor.trim());
+        if(tutor) {
+            Tutors.insert({internId, name: tutor})
+        }
     },
 });
 

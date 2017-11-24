@@ -19,6 +19,7 @@ import EducationItem from './EducationItem.jsx';
 import ActivityItem from './ActivityItem.jsx';
 import InternshipItem from './InternshipItem.jsx';
 import StagePresentation from './StagePresentationUpload.jsx';
+import TutorsContainer from '../containers/TutorsContainer.jsx';
 
 import {Row, Col} from 'react-flexbox-grid';
 
@@ -559,7 +560,7 @@ export default class InternDialog extends BaseComponent {
                             />
                         </Col>
                         <Col xs={3} sm={2}>
-                            <FlatButton label="История" fullWidth={true} style={{marginTop: 15}} />
+                            <TutorsContainer intern={intern._id} />
                         </Col>
                     </Row>
                     <Row>
