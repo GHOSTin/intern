@@ -22,7 +22,7 @@ export const update = new ValidatedMethod({
     }).validator(),
     run({ intern }) {
         intern = _.omit(intern, "createdAt");
-        let tutor = _.capitalize(intern.tutor.trim());
+        let tutor = intern.tutor ? _.capitalize(intern.tutor.trim()) : "";
         if(Meteor.isServer) {
           let {name} = Tutors.findOne({internId: intern._id}, {sort: {date: -1}})||{name: null};
           if (tutor && tutor !== name) {

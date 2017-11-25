@@ -59,35 +59,38 @@ const directionsList = [
     {id: 9, name: "Дирекция по правовым и корпоративным вопросам"},
 ];
 
+const defaultState = {
+    intern: {
+        firstname: "",
+        lastname: "",
+        middlename: "",
+        birthday: null,
+        educations: [],
+        stages: [{}],
+        activities: [],
+        internships: [],
+        direction: "",
+        department: "",
+        group: "",
+        gender: "",
+        army: false,
+        tabel: "",
+        enterDate: null,
+        position: "",
+        employmentDate: null,
+        dismissalDate: null,
+        tutor: "",
+        startSUDate: null,
+        endSUDate: null,
+        avatar: "/default-userAvatar.png",
+    },
+    cropperOpen: false,
+    img: null
+};
+
 export default class InternDialog extends BaseComponent {
-    state = {
-        intern: {
-            firstname: "",
-            lastname: "",
-            middlename: "",
-            birthday: null,
-            educations: [],
-            stages: [{}],
-            activities: [],
-            internships: [],
-            direction: "",
-            department: "",
-            group: "",
-            gender: "",
-            army: false,
-            tabel: null,
-            enterDate: null,
-            position: "",
-            employmentDate: null,
-            dismissalDate: null,
-            tutor: "",
-            startSUDate: null,
-            endSUDate: null,
-            avatar: "/default-userAvatar.png",
-        },
-        cropperOpen: false,
-        img: null
-    };
+
+    state = defaultState;
 
     constructor(props) {
         super(props);
@@ -463,7 +466,7 @@ export default class InternDialog extends BaseComponent {
                                 floatingLabelText="Табельный номер"
                                 type="number"
                                 onChange={this.changeHandler.bind(this, 'intern', 'tabel')}
-                                value={intern.tabel}
+                                value={intern.tabel||""}
                             />
                         </Col>
                         <Col xs={12} md={6}>
@@ -667,7 +670,7 @@ InternDialog.defaultProps = {
         group: "",
         gender: "",
         army: false,
-        tabel: null,
+        tabel: "",
         enterDate: null,
         position: "",
         employmentDate: null,
