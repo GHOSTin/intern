@@ -4,12 +4,18 @@ import BaseComponent from '../components/BaseComponent.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import Message from '../components/Message.jsx';
 import PivotTableUI from 'react-pivottable/PivotTableUI';
+import {derivers} from 'react-pivottable/Utilities';
 import 'react-pivottable/pivottable.css'
 
 const derivedAttributes = {
   "ФИО": (intern) => {
     return `${intern.lastname} ${intern.firstname} ${intern.middlename}`;
   },
+  "Пол": (intern) => {
+    let gender = {'male': "мужской", "female": "женский"}
+    return gender[intern.gender];
+  },
+  "Дата рождения": derivers.dateFormat("birthday", "%d.%m.%y"),
   "Дирекция": (intern) => {
     return intern.direction ? intern.direction.name : "";
   },
@@ -35,10 +41,14 @@ const derivedAttributes = {
     let lastEducation = intern.educations[intern.educations.length - 1];
     return lastEducation && lastEducation.course ? `${lastEducation.course} курс` : "";
   },
+  "Военнообязан": (intern) => {
+    return intern.army ? "истина" : "ложь"
+  }
 };
 
 const hiddenAttributes = [
-  "_id", "lastname", "firstname", "middlename", "direction", "educations", "tutor", "avatar", "tabel"
+  "_id", "lastname", "firstname", "middlename", "direction", "educations", "tutor",
+  "avatar", "tabel", "army", "gender", "birthday", "createdAt"
 ];
 
 export default class ReportsPage extends BaseComponent {
