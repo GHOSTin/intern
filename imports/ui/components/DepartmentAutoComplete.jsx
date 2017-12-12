@@ -23,7 +23,16 @@ const menuProps = {
 export class DepartmentAutoComplete extends BaseComponent {
     constructor(props){
         super(props);
+        this.state = {
+          searchText: this.props.searchText,
+        }
     }
+
+    handleUpdateInput = (searchText) => {
+        this.setState({
+          searchText: searchText,
+        });
+    };
 
     render() {
         return(
@@ -33,11 +42,15 @@ export class DepartmentAutoComplete extends BaseComponent {
                     dataSourceConfig={dataSourceConfig}
                     floatingLabelText={this.props.label}
                     fullWidth={true}
-                    id={this.props.id}
+                    name={this.props.name}
                     popoverProps={popoverProps}
                     menuProps={menuProps}
                     onNewRequest={this.props.onNewRequest}
-                    searchText={this.props.searchText}
+                    onUpdateInput={this.handleUpdateInput}
+                    searchText={this.state.searchText}
+                    filter={(text, key) => {
+                      return key.toLowerCase().includes(text.toLowerCase())
+                    }}
                 />
             </div>
         )
